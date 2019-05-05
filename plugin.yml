@@ -1,0 +1,12 @@
+name: FastLogin
+main: com.ksptooi.FL.BukkitSupport.FastLogin
+version: 0.4_D_RE
+depend: [GeneralDataCoreV5]
+commands:
+    login:
+    register:
+    fast:
+    l:
+    reg:
+    changepassword:
+    tc:
