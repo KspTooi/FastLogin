@@ -1,7 +1,8 @@
 FastLogin 配置文件
 ====
-配置文件一般位于目录:/Plugins/ksptooi/fastlogin/FastLogin.conf
-` `` java
+配置文件一般位于目录:/Plugins/ksptooi/fastlogin/FastLogin.conf <br>
+
+` ``
 @LineType=GeneralDataCore
 @LineVersion=V5
 @KeySeparationSymbol==
