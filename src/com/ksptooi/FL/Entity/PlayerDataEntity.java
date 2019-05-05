@@ -76,12 +76,10 @@ public class PlayerDataEntity {
 	
 	
 	public String getPlayername() {
-//		return playername;
 		return playername.toLowerCase();
 	}
 
 	public void setPlayername(String playername) {
-//		this.playername = playername;
 		this.playername = playername.toLowerCase();
 	}
 

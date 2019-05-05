@@ -7,7 +7,6 @@ import com.ksptooi.FL.PlayerProcess.PlayerLocationProcess;
 import com.ksptooi.FL.PlayerProcess.PlayerPasswordProcess;
 import com.ksptooi.FL.Util.FUtil;
 import com.ksptooi.FL.Util.LogManager;
-import com.ksptooi.Performance.PerformanceMonitorManager;
 import com.ksptooi.playerData_BLL.PlayerDataBLL_Interface;
 import com.ksptooi.playerData_BLL.PlayerDataBLLimpl;
 import com.ksptooi.security.AdvPasswordHash;
@@ -43,8 +42,6 @@ public class AdvPlayerRegThread implements Runnable{
 	
 	public void run() {
 		
-		//添加线程性能计数
-		PerformanceMonitorManager.addPATC();
 			
 		try{		
 			
@@ -55,7 +52,6 @@ public class AdvPlayerRegThread implements Runnable{
 			//检查注册参数是否合法
 			if(args.length < 3){
 				pl.sendMessage(FUtil.language.getNoConfirmPasswd());
-				PerformanceMonitorManager.removePATC();
 				return ;
 			}
 			
@@ -68,7 +64,6 @@ public class AdvPlayerRegThread implements Runnable{
 			
 			if(PDE.isRegister()){
 				pl.sendMessage(FUtil.language.getRepeatRegister());
-				PerformanceMonitorManager.removePATC();
 				return;
 			}
 			
@@ -77,14 +72,13 @@ public class AdvPlayerRegThread implements Runnable{
 			//判断ip是否已经达到限额	
 			if(FUtil.RIC.playerIp_isMaxReg(pl)){
 				pl.sendMessage("注册失败,每个IP最多只能注册"+FUtil.config.getMaxRegisterIP()+"个账号,你已超出限额！");
-				PerformanceMonitorManager.removePATC();
 				return;
 			}
 				
 			
 			//检查密码长度
 			if(!pwdProcess.passWordLengthIsAccess(pl, ConfirmPasswd)){
-				PerformanceMonitorManager.removePATC();
+				
 				return;
 			}
 			
@@ -92,7 +86,6 @@ public class AdvPlayerRegThread implements Runnable{
 			//检查密码与确认密码是否一致
 			if(!(Passwd.equals(ConfirmPasswd))){
 				pl.sendMessage(FUtil.language.getConfirmPasswdError());
-				PerformanceMonitorManager.removePATC();
 				return ;
 			}
 			
@@ -118,15 +111,14 @@ public class AdvPlayerRegThread implements Runnable{
 			
 			//将玩家传送到默认登陆位置
 			playerLocationProcess.TelePort_DefaultLoginLocation(pl);
-		
-			PerformanceMonitorManager.removePATC();
+			
+			
 			return;
 						
 			
 		} catch (Exception e){
 			
 			pl.sendMessage(FUtil.language.getNullPassword());
-			PerformanceMonitorManager.removePATC();
 			return;
 			
 		}

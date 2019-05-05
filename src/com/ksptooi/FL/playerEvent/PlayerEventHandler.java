@@ -20,9 +20,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+
 import com.ksptooi.FL.Entity.PlayerDataEntity;
 import com.ksptooi.FL.LogFitter.PlayerPasswordLogFitter;
-import com.ksptooi.FL.PDEContainer.PDECManager;
 import com.ksptooi.FL.PlayerProcess.PlayerEffectProcess;
 import com.ksptooi.FL.PlayerProcess.PlayerLocationProcess;
 import com.ksptooi.FL.PlayerProcess.PlayerNameProcess;
@@ -88,18 +88,6 @@ public class PlayerEventHandler implements Listener{
 		
 		//如果玩家IP未注册过 则将它的IP添加进IPCount
 		
-		//清除玩家数据缓存
-		PDECManager.removePDE(pl.getName());
-		
-		
-		//玩家名过滤
-//		if(!PF.playerNameisAllow(pl.getName())){
-//			
-//			
-//			pl.kickPlayer("请使用名称:"+PF.findPlayerName(pl.getName())+"进入服务器!");
-//			
-//		}
-		
 		
 		//初始化玩家属性
 		PDB.createPlayerData(pl.getName());
@@ -129,14 +117,12 @@ public class PlayerEventHandler implements Listener{
 		//为玩家添加失明效果
 		PEP.addPreLoginEffect(pl);
 		
-		
-		
 		//全部通过则开启一个玩家登录监测线程
 		new Thread(new PlayerLoginMessageSendThread(pl)).start();
 
 	}
 		
-
+	
 	//移动	
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event){
@@ -148,15 +134,6 @@ public class PlayerEventHandler implements Listener{
 		
 		//判断是否在下落
 		if(event.getFrom().getY()>event.getTo().getY()){
-			return ;
-		}
-		
-		//判断是否移动了位置
-		if(event.getFrom().getX()==event.getTo().getX()){
-			return ;
-		}
-		
-		if(event.getFrom().getZ()==event.getTo().getZ()){
 			return ;
 		}
 		
@@ -176,7 +153,9 @@ public class PlayerEventHandler implements Listener{
 	@EventHandler
 	public void onPlayerChat(AsyncPlayerChatEvent event){
 		
+		
 		PlayerDataEntity PDE = PDB.getPlayerData(event.getPlayer());
+		
 		
 		if(!PDE.isLogin()){	
 			event.setCancelled(true);
@@ -371,19 +350,18 @@ public class PlayerEventHandler implements Listener{
 			
 		Player pl=(Player)event.getWhoClicked();
 		
-
+		
 		
 		PlayerDataEntity PDE = PDB.getPlayerData(pl);
 		
 		
 		if(!PDE.isLogin()){
-			pl.closeInventory();
 			event.setCancelled(true);
 		}
 		
 		
+		
 	}
-	
 	
 	
 	
@@ -433,9 +411,6 @@ public class PlayerEventHandler implements Listener{
 		
 		//更新用户GD文件
 		PDB.updatePlayerData(PDE);
-		
-		//清理缓存
-		PDECManager.removePDE(event.getPlayer().getName());
 
 	}
 	

@@ -5,6 +5,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.ksptooi.FL.Command.CommandHandler;
+import com.ksptooi.FL.Exception.AdvPluginErrorProcess;
 import com.ksptooi.FL.LogFitter.PlayerPasswordLogFitter;
 import com.ksptooi.FL.PluginConf.ConfigReader;
 import com.ksptooi.FL.PluginConf.ConfigUpdate;
@@ -21,6 +22,7 @@ public class FastLogin extends JavaPlugin {
 	ConfigUpdate PCCU=null;
 	CommandHandler CH=null;
 	IOController_V5 v5=null;
+	AdvPluginErrorProcess APEP=null;
 	PlayerPasswordLogFitter PPLF = null;
 	
 	public FastLogin(){
@@ -30,6 +32,7 @@ public class FastLogin extends JavaPlugin {
 		PCCW=new ConfigWriter();
 		PCCU=new ConfigUpdate();
 		CH=new CommandHandler();	
+		APEP=new AdvPluginErrorProcess();
 		PPLF = new PlayerPasswordLogFitter();
 	}
 	

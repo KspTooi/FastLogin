@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import com.ksptooi.FL.Entity.PlayerDataEntity;
 import com.ksptooi.FL.MultiVersion.AdvMultiVersionAsyncProcess;
 import com.ksptooi.FL.Util.FUtil;
-import com.ksptooi.Performance.PerformanceMonitorManager;
 import com.ksptooi.playerData_BLL.PlayerDataBLL_Interface;
 import com.ksptooi.playerData_BLL.PlayerDataBLLimpl;
 
@@ -31,8 +30,6 @@ public class PlayerLoginMessageSendThread implements Runnable{
 	
 	public void run(){
 
-		//添加线程性能计数
-		PerformanceMonitorManager.addPATC();
 		
 		PlayerDataEntity PDE=playerDataBLL.getPlayerData(pl);
 		
@@ -40,7 +37,6 @@ public class PlayerLoginMessageSendThread implements Runnable{
 		//已登录则关闭线程
 		if(PDE.isLogin()){
 			FUtil.NoDamagePlayer.remove(pl.getName());
-			PerformanceMonitorManager.removePATC();
 			return;
 		}
 		
@@ -116,8 +112,6 @@ public class PlayerLoginMessageSendThread implements Runnable{
 			
 		}
 		
-		//清除线程性能计数
-		PerformanceMonitorManager.removePATC();
 		
 		
 	}

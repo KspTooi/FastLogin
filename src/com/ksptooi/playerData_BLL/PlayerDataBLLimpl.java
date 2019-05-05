@@ -25,9 +25,9 @@ public class PlayerDataBLLimpl implements PlayerDataBLL_Interface{
 	
 	@Override
 	public boolean createPlayerData(String playerName) {
-
 		
 		playerName=playerName.toLowerCase();
+
 		
 		PSDB=FUtil.playerSqlDataBLL;
 		
@@ -40,7 +40,6 @@ public class PlayerDataBLLimpl implements PlayerDataBLL_Interface{
 		
 		return playerDataDAL.createPlayerData(playerName);
 	}
-	
 
 	@Override
 	public boolean createPlayerData(Player playerEntity) {

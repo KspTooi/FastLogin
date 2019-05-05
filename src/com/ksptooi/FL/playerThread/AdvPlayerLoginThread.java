@@ -5,7 +5,6 @@ import com.ksptooi.FL.Entity.PlayerDataEntity;
 import com.ksptooi.FL.PlayerProcess.PlayerEffectProcess;
 import com.ksptooi.FL.Util.FUtil;
 import com.ksptooi.FL.Util.LogManager;
-import com.ksptooi.Performance.PerformanceMonitorManager;
 import com.ksptooi.playerData_BLL.PlayerDataBLL_Interface;
 import com.ksptooi.playerData_BLL.PlayerDataBLLimpl;
 import com.ksptooi.FL.PlayerProcess.*;
@@ -32,16 +31,11 @@ public class AdvPlayerLoginThread implements Runnable{
 	
 	public void run() {
 		
-		//添加性能计数
-		PerformanceMonitorManager.addPATC();
-		
-		
 		PlayerDataEntity PDE = playerDataBLL.getPlayerData(pl);
 		
 		//已登录则关闭线程
 		if (PDE.isLogin()) {		
 			pl.sendMessage(FUtil.language.getRepeatLogin());
-			PerformanceMonitorManager.removePATC();
 			return;
 		}
 		
@@ -49,7 +43,6 @@ public class AdvPlayerLoginThread implements Runnable{
 		// 未注册则关闭线程
 		if(!PDE.isRegister()){	
 			pl.sendMessage(FUtil.language.getNotRegister2());
-			PerformanceMonitorManager.removePATC();
 			return;
 		}
 		
@@ -58,12 +51,9 @@ public class AdvPlayerLoginThread implements Runnable{
 		if(FUtil.LGD.isGhostPlayer(pl)){
 			
 			FUtil.LGD.kickPlayer(pl);
-			PerformanceMonitorManager.removePATC();
+			
 			return;
 		}
-		
-		//检查玩家名一致性
-		
 		
 		
 
@@ -103,7 +93,6 @@ public class AdvPlayerLoginThread implements Runnable{
 				}
 				
 				
-				PerformanceMonitorManager.removePATC();
 				return;
 				
 			}
@@ -111,12 +100,10 @@ public class AdvPlayerLoginThread implements Runnable{
 
 			
 			pl.sendMessage(FUtil.language.getPasswordError());
-			PerformanceMonitorManager.removePATC();
 			return;
 
 		}catch (Exception e) {
 			pl.sendMessage(FUtil.language.getNullPassword());
-			PerformanceMonitorManager.removePATC();
 			return;
 		}
 		

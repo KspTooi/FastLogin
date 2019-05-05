@@ -5,10 +5,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import com.ksptooi.FL.Entity.PlayerDataEntity;
-import com.ksptooi.FL.PDEContainer.PDECManager;
 import com.ksptooi.FL.Util.FUtil;
 import com.ksptooi.FL.Util.LogManager;
-import com.ksptooi.Performance.PerformanceMonitorManager;
 import com.ksptooi.gdc.FileAPI.IOController_V5;
 
 public class PlayerDataDALimpl implements PlayerDataDAL_Interface{
@@ -25,8 +23,6 @@ public class PlayerDataDALimpl implements PlayerDataDAL_Interface{
 	//创建玩家数据文件
 	@Override
 	public boolean createPlayerData(String playerName) {
-		
-		playerName=playerName.toLowerCase();
 		
 		File playerDataFile = this.getPlayerDataFile(playerName);
 		
@@ -55,29 +51,18 @@ public class PlayerDataDALimpl implements PlayerDataDAL_Interface{
 	}
 	
 
-	//从GD文件||缓存 加载玩家数据文件
+	//从GD文件加载玩家数据文件
 	@Override
 	public PlayerDataEntity queryPlayerDataByName(String playerName) {
 		
-		
-		
-		//检查缓存
-		
-		if(PDECManager.isExistsOfPDE(playerName)){
-						
-			return PDECManager.getPDE(playerName);
-			
-		}
-		
-		//更新IO计数
-		PerformanceMonitorManager.addPFPC();
-			
+	
 		
 		File playerDataFile = this.getPlayerDataFile(playerName);
 		
 		PlayerDataEntity PDE=new PlayerDataEntity();
 		
 		v5.setTarget(playerDataFile);
+		
 		
 			
 		PDE.setPlayername(v5.getKeyValue("playername"));
@@ -106,8 +91,7 @@ public class PlayerDataDALimpl implements PlayerDataDAL_Interface{
 			
 		}
 			
-		//添加缓存
-		PDECManager.updatePDE(PDE);
+			
 		
 		return PDE;
 	}
@@ -124,9 +108,12 @@ public class PlayerDataDALimpl implements PlayerDataDAL_Interface{
 	public boolean updatePlayerData(PlayerDataEntity playerDataEntity) {
 		
 		
+		
 		File playerDataFile = this.getPlayerDataFile(playerDataEntity.getPlayername());
 		
 		PlayerDataEntity PDE=playerDataEntity;
+		
+		
 		
 		v5.setTarget(playerDataFile);
 		
@@ -140,16 +127,11 @@ public class PlayerDataDALimpl implements PlayerDataDAL_Interface{
 		v5.setKeyValue("loc.pitch", String.valueOf(PDE.getLoc_pitch()));
 		v5.setKeyValue("loc.yaw", String.valueOf(PDE.getLoc_yaw()));
 		
-		//更新IO计数
-		PerformanceMonitorManager.addPFPC();
-		
-		//更新缓存
-		PDECManager.updatePDE(playerDataEntity);
-
 		return true;
 	}
 	
-
+	
+	
 	//获取玩家数据文件位置
 	@Override
 	public File getPlayerDataFile(String playerName) {

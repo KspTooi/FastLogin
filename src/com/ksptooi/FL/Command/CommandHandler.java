@@ -13,7 +13,6 @@ import com.ksptooi.FL.PluginConf.ConfigReader;
 import com.ksptooi.FL.PluginConf.ConfigWriter;
 import com.ksptooi.FL.Util.FUtil;
 import com.ksptooi.FL.Util.LogManager;
-import com.ksptooi.Performance.PerformanceMonitorManager;
 import com.ksptooi.playerData_BLL.PlayerDataBLL_Interface;
 import com.ksptooi.playerData_BLL.PlayerDataBLLimpl;
 import com.ksptooi.security.AdvPasswordHash;
@@ -73,25 +72,6 @@ public class CommandHandler{
 //			new Thread(new PlayerRegThread(pl,args)).start();
 //			
 //		}
-		
-		if(cmd.getName().equalsIgnoreCase("TC")){
-			
-			if(sender instanceof Player){
-				sender.sendMessage("[FastLogin]·玩家不能使用此命令!");
-				return false;
-			}	
-			
-			lm.writerInfo("----FastLogin 性能监测----");
-			
-			lm.writerInfo("累计IO:"+PerformanceMonitorManager.getPFPC());
-			
-			lm.writerInfo("已缓存:"+PerformanceMonitorManager.getPDECCount());
-			
-			lm.writerInfo("活动线程:"+PerformanceMonitorManager.getPATC());
-			
-			lm.writerInfo("-------------------------");
-			
-		}
 		
 		
 		//OP命令(Reload=重载文件,set=设置默认登陆位置,go=传送到登陆位置,del=删除登陆位置,reset=更改玩家密码)

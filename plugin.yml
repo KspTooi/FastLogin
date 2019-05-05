@@ -1,6 +1,6 @@
 name: FastLogin
 main: com.ksptooi.FL.BukkitSupport.FastLogin
-version: 0.4_D_RE
+version: 0.4_F_RE
 depend: [GeneralDataCoreV5]
 commands:
     login:
@@ -9,4 +9,3 @@ commands:
     l:
     reg:
     changepassword:
-    tc:
