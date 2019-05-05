@@ -38,4 +38,5 @@ FastLogin是一个非常轻量化的登录插件,和同类插件比起来,它非
 
 前置
 ====
+* [前置依赖gdcV5](https://github.com/ishiyamasayuri/FastLogin/tree/master/Depend)
 
