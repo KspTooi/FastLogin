@@ -1,3 +1,7 @@
+FastLogin 配置文件
+====
+配置文件一般位于目录:/Plugins/ksptooi/fastlogin/FastLogin.conf
+` `` java
 @LineType=GeneralDataCore
 @LineVersion=V5
 @KeySeparationSymbol==
@@ -91,3 +95,4 @@ PlayerLocy=locy
 PlayerLocz=locz
 PlayerLocpitch=locpitch
 PlayerLocyaw=locyaw
+```
