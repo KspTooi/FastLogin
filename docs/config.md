@@ -2,7 +2,7 @@ FastLogin 配置文件
 ====
 配置文件一般位于目录:/Plugins/ksptooi/fastlogin/FastLogin.conf <br>
 
-```gdc
+```yml
 @LineType=GeneralDataCore
 @LineVersion=V5
 @KeySeparationSymbol==
