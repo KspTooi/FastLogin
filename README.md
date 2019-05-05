@@ -26,13 +26,16 @@ FastLogin是一个非常轻量化的登录插件,和同类插件比起来,它非
 
 命令
 ====
+* [例子:FastLogin 命令](https://github.com/ishiyamasayuri/FastLogin/blob/master/docs/Commands.md)
 
 权限
 ====
+不支持权限组
 
 配置文件
 ====
 * [例子:FastLogin 配置文件](https://github.com/ishiyamasayuri/FastLogin/blob/master/docs/config.md)
 
 前置
+
 ====
