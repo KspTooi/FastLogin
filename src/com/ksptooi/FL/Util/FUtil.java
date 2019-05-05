@@ -21,7 +21,7 @@ import com.ksptooi.security.RegsterIPCount;
 public class FUtil {
 		
 	//全局变量
-	public static final String Version="0.43-D-RE";
+	public static final String Version="0.43-D-RC";
 	
 	public static final File fastLoginConfigFile=new File("plugins/ksptooi/fastlogin/FastLogin.conf");
 	

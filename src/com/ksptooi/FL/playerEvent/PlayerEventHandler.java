@@ -151,14 +151,6 @@ public class PlayerEventHandler implements Listener{
 			return ;
 		}
 		
-		//判断是否移动了位置
-		if(event.getFrom().getX()==event.getTo().getX()){
-			return ;
-		}
-		
-		if(event.getFrom().getZ()==event.getTo().getZ()){
-			return ;
-		}
 		
 		
 		PlayerDataEntity PDE = PDB.getPlayerData(event.getPlayer());

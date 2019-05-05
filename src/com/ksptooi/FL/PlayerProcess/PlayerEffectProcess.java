@@ -65,7 +65,7 @@ public class PlayerEffectProcess {
 	/**
 	 * 为玩家移除失明效果
 	 */
-	public boolean removePreLoginEffect(Player pl){
+	public boolean removePreLoginEffect(final Player pl){
 		
 		if(FUtil.config.isEnable_PlayerPreLoginEffect()){
 			

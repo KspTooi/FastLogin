@@ -40,7 +40,6 @@ public class CommandHandler{
 	}
 	
 	
-	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
 		
 		

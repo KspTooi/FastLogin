@@ -35,7 +35,7 @@ public class LoginGhostDefense {
 		
 	}
 	
-	public void kickPlayer(Player pl){
+	public void kickPlayer(final Player pl){
 		
 		
 		if(FUtil.config.isEnable_SecurityWarning()){

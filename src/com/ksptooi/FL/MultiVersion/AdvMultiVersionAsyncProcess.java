@@ -14,7 +14,7 @@ public class AdvMultiVersionAsyncProcess {
 	
 	
 	//异步转同步踢出玩家
-	public void AsyncKickPlayer(Player pl,String KickMessage){
+	public void AsyncKickPlayer(final Player pl,final String KickMessage){
 		
 		Bukkit.getScheduler().runTask(FUtil.MainClass, new Runnable() {
 
@@ -28,7 +28,7 @@ public class AdvMultiVersionAsyncProcess {
 	
 	
 	//异步转同步设置玩家的游戏模式
-	public void AsyncSetPlayerGameMode(Player pl,int GameModeCode){
+	public void AsyncSetPlayerGameMode(final Player pl,final int GameModeCode){
 		
 		Bukkit.getScheduler().runTask(FUtil.MainClass, new Runnable() {
 
@@ -52,7 +52,7 @@ public class AdvMultiVersionAsyncProcess {
 	}
 	
 	//异步转同步为玩家添加Effect
-	public void AsyncAddPotionEffect(Player pl,PotionEffect PE){
+	public void AsyncAddPotionEffect(final Player pl,final PotionEffect PE){
 		
 		
 		Bukkit.getScheduler().runTask(FUtil.MainClass, new Runnable() {
@@ -70,7 +70,7 @@ public class AdvMultiVersionAsyncProcess {
 	}
 	
 	//异步转同步为玩家移除Effect
-	public void AsyncRemovePotionEffect(Player pl,PotionEffectType PET){
+	public void AsyncRemovePotionEffect(final Player pl,final PotionEffectType PET){
 		
 		
 		Bukkit.getScheduler().runTask(FUtil.MainClass, new Runnable() {
