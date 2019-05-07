@@ -1,7 +1,7 @@
 FastLogin
 ======
 "一个强大的轻量级登录插件!"<br>
-FastLogin A powerful lightweight login plugin!
+FastLogin A powerful lightweight login plugin!<br>
 ![image](https://github.com/ishiyamasayuri/FastLogin/blob/master/FastLogin_LogoRE.png)
 
 
