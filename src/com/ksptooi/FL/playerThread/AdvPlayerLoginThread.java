@@ -1,21 +1,23 @@
 package com.ksptooi.FL.playerThread;
 
 import org.bukkit.entity.Player;
-import com.ksptooi.FL.Entity.PlayerDataEntity;
+
+import com.ksptooi.FL.Data.Config.ConfigManager;
+import com.ksptooi.FL.Data.Player.Entity.PlayerEntity;
+import com.ksptooi.FL.Data.PlayerData.PlayerData_Interface;
+import com.ksptooi.FL.Data.PlayerData.PlayerDataManager;
+import com.ksptooi.FL.Performance.PerformanceMonitorManager;
 import com.ksptooi.FL.PlayerProcess.PlayerEffectProcess;
 import com.ksptooi.FL.Util.FUtil;
-import com.ksptooi.FL.Util.LogManager;
-import com.ksptooi.Performance.PerformanceMonitorManager;
-import com.ksptooi.playerData_BLL.PlayerDataBLL_Interface;
-import com.ksptooi.playerData_BLL.PlayerDataBLLimpl;
+import com.ksptooi.FL.Util.Logger;
 import com.ksptooi.FL.PlayerProcess.*;
 
 public class AdvPlayerLoginThread implements Runnable{
 
 	Player pl=null;
 	String[] args=null;
-	PlayerDataBLL_Interface playerDataBLL=null;
-	LogManager lm=null;
+	PlayerData_Interface playerDataBLL=null;
+	Logger lm=null;
 	PlayerEffectProcess PEP=null;
 	PlayerPasswordProcess PlayerPasswordProcess = null;
 
@@ -24,8 +26,8 @@ public class AdvPlayerLoginThread implements Runnable{
 		
 		this.args=args;
 		this.pl=pl;
-		lm=new LogManager();
-		playerDataBLL=new PlayerDataBLLimpl();
+		lm=new Logger();
+		playerDataBLL=new PlayerDataManager();
 		PEP = new PlayerEffectProcess();
 		PlayerPasswordProcess = new PlayerPasswordProcess();
 	}
@@ -36,11 +38,11 @@ public class AdvPlayerLoginThread implements Runnable{
 		PerformanceMonitorManager.addPATC();
 		
 		
-		PlayerDataEntity PDE = playerDataBLL.getPlayerData(pl);
+		PlayerEntity PDE = playerDataBLL.getPlayerData(pl);
 		
 		//已登录则关闭线程
 		if (PDE.isLogin()) {		
-			pl.sendMessage(FUtil.language.getRepeatLogin());
+			pl.sendMessage(ConfigManager.getLanguage().getRepeatLogin());
 			PerformanceMonitorManager.removePATC();
 			return;
 		}
@@ -48,7 +50,7 @@ public class AdvPlayerLoginThread implements Runnable{
 		
 		// 未注册则关闭线程
 		if(!PDE.isRegister()){	
-			pl.sendMessage(FUtil.language.getNotRegister2());
+			pl.sendMessage(ConfigManager.getLanguage().getNotRegister2());
 			PerformanceMonitorManager.removePATC();
 			return;
 		}
@@ -80,7 +82,7 @@ public class AdvPlayerLoginThread implements Runnable{
 				PDE.setLogin(true);
 				playerDataBLL.updatePlayerData(PDE);
 
-				pl.sendMessage(FUtil.language.getLoginSuccess());
+				pl.sendMessage(ConfigManager.getLanguage().getLoginSuccess());
 
 				//如果玩家登录前是OP 赋予玩家OP权限
 				FUtil.LS.loginSuccess_OpSecurityProcess(pl);
@@ -98,7 +100,7 @@ public class AdvPlayerLoginThread implements Runnable{
 				PEP.removePreLoginEffect(pl);
 				
 				//如果isEnable_LoginSecurity为True 则将玩家传送回最后下线的地方
-				if(FUtil.config.isEnable_LoginSecurity()==true){
+				if(ConfigManager.getConfig().isEnable_LoginSecurity()==true){
 					pl.teleport(playerDataBLL.getPlayerData(pl).getLastQuitLocation());
 				}
 				
@@ -110,12 +112,12 @@ public class AdvPlayerLoginThread implements Runnable{
 			
 
 			
-			pl.sendMessage(FUtil.language.getPasswordError());
+			pl.sendMessage(ConfigManager.getLanguage().getPasswordError());
 			PerformanceMonitorManager.removePATC();
 			return;
 
 		}catch (Exception e) {
-			pl.sendMessage(FUtil.language.getNullPassword());
+			pl.sendMessage(ConfigManager.getLanguage().getNullPassword());
 			PerformanceMonitorManager.removePATC();
 			return;
 		}

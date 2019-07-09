@@ -6,17 +6,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import com.ksptooi.FL.MultiVersion.AdvMultiVersionAsyncProcess;
+import com.ksptooi.FL.Data.Config.ConfigManager;
+import com.ksptooi.FL.Process.Player.PlayerAsyncProcess;
 import com.ksptooi.FL.Util.FUtil;
 
 public class PlayerEffectProcess {
 
 	
-	AdvMultiVersionAsyncProcess AMVAP=null;
+	PlayerAsyncProcess AMVAP=null;
 	
 	
 	public PlayerEffectProcess(){
-		AMVAP = new AdvMultiVersionAsyncProcess();
+		AMVAP = new PlayerAsyncProcess();
 	}
 	
 	
@@ -31,7 +32,7 @@ public class PlayerEffectProcess {
 	
 	public boolean addLoginedEffect(Player pl){
 		
-		if(FUtil.config.isEnable_PlayerLoginedEffect()){
+		if(ConfigManager.getConfig().isEnable_PlayerLoginedEffect()){
 			pl.getWorld().playEffect(pl.getLocation().add(-1, 1.0D, 1),Effect.ENDER_SIGNAL, 0);
 			pl.getWorld().playEffect(pl.getLocation().add(-1, 1.0D, -1),Effect.ENDER_SIGNAL, 0);
 			pl.getWorld().playEffect(pl.getLocation().add(1, 1.0D, 1),Effect.ENDER_SIGNAL, 0);
@@ -51,7 +52,7 @@ public class PlayerEffectProcess {
 	public boolean addPreLoginEffect(Player pl){
 	
 		
-		if(FUtil.config.isEnable_PlayerPreLoginEffect()){
+		if(ConfigManager.getConfig().isEnable_PlayerPreLoginEffect()){
 			
 			AMVAP.AsyncAddPotionEffect(pl, new PotionEffect(PotionEffectType.BLINDNESS , 150000, 1));
 			
@@ -67,7 +68,7 @@ public class PlayerEffectProcess {
 	 */
 	public boolean removePreLoginEffect(Player pl){
 		
-		if(FUtil.config.isEnable_PlayerPreLoginEffect()){
+		if(ConfigManager.getConfig().isEnable_PlayerPreLoginEffect()){
 			
 			
 			Bukkit.getScheduler().runTask(FUtil.MainClass, new Runnable() {

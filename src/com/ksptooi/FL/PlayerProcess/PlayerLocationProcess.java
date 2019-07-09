@@ -1,6 +1,8 @@
 package com.ksptooi.FL.PlayerProcess;
 
 import org.bukkit.entity.Player;
+
+import com.ksptooi.FL.Data.Config.ConfigManager;
 import com.ksptooi.FL.Util.FUtil;
 
 
@@ -16,9 +18,9 @@ public class PlayerLocationProcess {
 	public boolean TelePort_DefaultLoginLocation(Player playerEntity){
 		
 		
-		if(! FUtil.defaultLocationEntity.getLocation_world().equalsIgnoreCase("empty")){
+		if(! ConfigManager.getLocation().getLocation_world().equalsIgnoreCase("empty")){
 			
-			playerEntity.teleport(FUtil.defaultLocationEntity.getLoginLocation());
+			playerEntity.teleport(ConfigManager.getLocation().getLoginLocation());
 			return true;
 			
 		}	

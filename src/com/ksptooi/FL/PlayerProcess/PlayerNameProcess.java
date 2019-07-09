@@ -2,7 +2,7 @@ package com.ksptooi.FL.PlayerProcess;
 
 import org.bukkit.entity.Player;
 
-import com.ksptooi.FL.Util.FUtil;
+import com.ksptooi.FL.Data.Config.ConfigManager;
 
 
 public class PlayerNameProcess {
@@ -18,17 +18,17 @@ public class PlayerNameProcess {
 		
 		
 		//判断玩家名称长度
-		if (Player.getName().length() < FUtil.config.getPlayerNameMinLength()) {
-			Player.kickPlayer("玩家名过短 最小需要" + FUtil.config.getPlayerNameMinLength() + "个字符");
+		if (Player.getName().length() < ConfigManager.getConfig().getPlayerNameMinLength()) {
+			Player.kickPlayer("玩家名过短 最小需要" + ConfigManager.getConfig().getPlayerNameMinLength() + "个字符");
 			return false;
 		}
 		//End
 
 		
 		//以自定义正则表达式判断玩家名称 Start
-		if(!FUtil.config.getRegexMatchForPlayerName().equalsIgnoreCase("*")){
+		if(!ConfigManager.getConfig().getRegexMatchForPlayerName().equalsIgnoreCase("*")){
 			
-			if(!Player.getName().matches(FUtil.config.getRegexMatchForPlayerName())){
+			if(!Player.getName().matches(ConfigManager.getConfig().getRegexMatchForPlayerName())){
 				Player.kickPlayer("玩家名称不符合要求！");			
 				return false; 
 			}
@@ -39,7 +39,7 @@ public class PlayerNameProcess {
 		
 		
 		//以严格模式判断玩家名称 Start
-		if (FUtil.config.isEnable_UserNameStrictmode()){
+		if (ConfigManager.getConfig().isEnable_UserNameStrictmode()){
 			
 			String regex = "([A-Z]|[a-z]|[0-9]|-|_){1,}";
 	
@@ -54,7 +54,7 @@ public class PlayerNameProcess {
 		//End
 	    	    
 		//判断玩家名称是否含有被服务器禁用的字符
-		for(String str:FUtil.config.getBanName()){
+		for(String str:ConfigManager.getConfig().getBanName()){
 			
 			if(Player.getName().toLowerCase().contains(str.toLowerCase())){
 				

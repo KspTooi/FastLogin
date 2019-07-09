@@ -2,12 +2,14 @@ package com.ksptooi.FL.playerThread;
 
 
 import org.bukkit.entity.Player;
-import com.ksptooi.FL.Entity.PlayerDataEntity;
-import com.ksptooi.FL.MultiVersion.AdvMultiVersionAsyncProcess;
+
+import com.ksptooi.FL.Data.Config.ConfigManager;
+import com.ksptooi.FL.Data.Player.Entity.PlayerEntity;
+import com.ksptooi.FL.Data.PlayerData.PlayerData_Interface;
+import com.ksptooi.FL.Data.PlayerData.PlayerDataManager;
+import com.ksptooi.FL.Performance.PerformanceMonitorManager;
+import com.ksptooi.FL.Process.Player.PlayerAsyncProcess;
 import com.ksptooi.FL.Util.FUtil;
-import com.ksptooi.Performance.PerformanceMonitorManager;
-import com.ksptooi.playerData_BLL.PlayerDataBLL_Interface;
-import com.ksptooi.playerData_BLL.PlayerDataBLLimpl;
 
 
 public class PlayerLoginMessageSendThread implements Runnable{
@@ -16,15 +18,15 @@ public class PlayerLoginMessageSendThread implements Runnable{
 	Player pl=null;
 	int LoginTime=0;
 	int sendtime=0;
-	AdvMultiVersionAsyncProcess AMVAP = null;
+	PlayerAsyncProcess AMVAP = null;
 
 	
-	PlayerDataBLL_Interface playerDataBLL=null;
+	PlayerData_Interface playerDataBLL=null;
 	
 	public PlayerLoginMessageSendThread(Player pl) {
 		this.pl=pl;		
-		playerDataBLL=new PlayerDataBLLimpl();
-		AMVAP = new AdvMultiVersionAsyncProcess();
+		playerDataBLL=new PlayerDataManager();
+		AMVAP = new PlayerAsyncProcess();
 
 	}
 	
@@ -34,7 +36,7 @@ public class PlayerLoginMessageSendThread implements Runnable{
 		//添加线程性能计数
 		PerformanceMonitorManager.addPATC();
 		
-		PlayerDataEntity PDE=playerDataBLL.getPlayerData(pl);
+		PlayerEntity PDE=playerDataBLL.getPlayerData(pl);
 		
 		
 		//已登录则关闭线程
@@ -48,11 +50,11 @@ public class PlayerLoginMessageSendThread implements Runnable{
 		
 		if(PDE.isRegister()){
 			
-			pl.sendMessage(FUtil.language.getNotlogin());
+			pl.sendMessage(ConfigManager.getLanguage().getNotlogin());
 			
 		}else{
 			
-			pl.sendMessage(FUtil.language.getNotRegister());
+			pl.sendMessage(ConfigManager.getLanguage().getNotRegister());
 			
 		}
 		
@@ -77,9 +79,9 @@ public class PlayerLoginMessageSendThread implements Runnable{
 			}
 			
 			//登陆超时则关闭线程 && 踢出玩家
-			if(LoginTime > FUtil.config.getLoginTimeOut()){
+			if(LoginTime > ConfigManager.getConfig().getLoginTimeOut()){
 				
-				AMVAP.AsyncKickPlayer(pl,FUtil.language.getLoginTimeOutKick());
+				AMVAP.AsyncKickPlayer(pl,ConfigManager.getLanguage().getLoginTimeOutKick());
 							
 				break;
 			}
@@ -93,7 +95,7 @@ public class PlayerLoginMessageSendThread implements Runnable{
 			}
 			
 					
-			if(!(sendtime >= FUtil.config.getMessageInterval())){
+			if(!(sendtime >= ConfigManager.getConfig().getMessageInterval())){
 				continue;
 			}
 					
@@ -103,12 +105,12 @@ public class PlayerLoginMessageSendThread implements Runnable{
 			//发送登录/注册消息
 			if(PDE.isRegister()){
 				
-				pl.sendMessage(FUtil.language.getNotlogin());
+				pl.sendMessage(ConfigManager.getLanguage().getNotlogin());
 				continue;
 				
 			}else{
 				
-				pl.sendMessage(FUtil.language.getNotRegister());
+				pl.sendMessage(ConfigManager.getLanguage().getNotRegister());
 				continue;
 			}
 			

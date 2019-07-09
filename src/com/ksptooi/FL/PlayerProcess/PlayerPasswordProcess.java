@@ -2,27 +2,27 @@ package com.ksptooi.FL.PlayerProcess;
 
 import org.bukkit.entity.Player;
 
-import com.ksptooi.FL.Entity.PlayerDataEntity;
-import com.ksptooi.FL.Util.FUtil;
-import com.ksptooi.FL.Util.LogManager;
+import com.ksptooi.FL.Data.Config.ConfigManager;
+import com.ksptooi.FL.Data.Player.Entity.PlayerEntity;
+import com.ksptooi.FL.Data.PlayerData.PlayerDataManager;
+import com.ksptooi.FL.Data.PlayerData.PlayerData_Interface;
+import com.ksptooi.FL.Util.Logger;
 import com.ksptooi.FL.playerThread.PlayerLoginMessageSendThread;
-import com.ksptooi.playerData_BLL.PlayerDataBLL_Interface;
-import com.ksptooi.playerData_BLL.PlayerDataBLLimpl;
-import com.ksptooi.security.AdvPasswordHash;
+import com.ksptooi.FL.security.AdvPasswordHash;
 
 
 public class PlayerPasswordProcess {
 
-	PlayerDataBLL_Interface playerDataBLL=null;
+	PlayerData_Interface playerDataBLL=null;
 	AdvPasswordHash APH=null;
-	LogManager logManager = null;
-	PlayerDataBLL_Interface PDBI=null;
+	Logger logManager = null;
+	PlayerData_Interface PDBI=null;
 	
 	public PlayerPasswordProcess(){
-		playerDataBLL=new PlayerDataBLLimpl();
+		playerDataBLL=new PlayerDataManager();
 		APH = new AdvPasswordHash();
-		logManager = new LogManager();
-		PDBI = new PlayerDataBLLimpl();
+		logManager = new Logger();
+		PDBI = new PlayerDataManager();
 	}
 	
 	
@@ -33,13 +33,13 @@ public class PlayerPasswordProcess {
 	 */
 	public boolean passWordLengthIsAccess(Player pl,String Passwd){
 		
-		if(Passwd.length()>FUtil.config.getPasswordMaxLength()){
-			pl.sendMessage(FUtil.language.getPasswdTooLong());
+		if(Passwd.length()>ConfigManager.getConfig().getPasswordMaxLength()){
+			pl.sendMessage(ConfigManager.getLanguage().getPasswdTooLong());
 			return false;
 		}
 		
-		if(Passwd.length()<FUtil.config.getPasswordMinLength()){
-			pl.sendMessage(FUtil.language.getPasswdTooShost());
+		if(Passwd.length()<ConfigManager.getConfig().getPasswordMinLength()){
+			pl.sendMessage(ConfigManager.getLanguage().getPasswdTooShost());
 			return false;
 		}
 		
@@ -60,31 +60,31 @@ public class PlayerPasswordProcess {
 		
 		
 		//判断有无加密
-		if(FUtil.config.getEnable_passwordHash().equalsIgnoreCase("md5")){
+		if(ConfigManager.getConfig().getEnable_passwordHash().equalsIgnoreCase("md5")){
 			this.ChangePasswdMD5(playerEntity, OldPasswd, NewPasswd, ConfirmNewPasswd);
 			return;
 		}	
 		
 		
-		PlayerDataEntity PDE = playerDataBLL.getPlayerData(playerEntity);
+		PlayerEntity PDE = playerDataBLL.getPlayerData(playerEntity);
 		
 		
 		
 		//判断输入的旧密码是否正确
 		if( ! PDE.getPassword().equals(OldPasswd)){
-			playerEntity.sendMessage(FUtil.language.getChangePw_OldpwErr());
+			playerEntity.sendMessage(ConfigManager.getLanguage().getChangePw_OldpwErr());
 			return;
 		}
 		
 		//判断两次输入的密码是否一致
 		if(!(NewPasswd.equals(ConfirmNewPasswd))){
-			playerEntity.sendMessage(FUtil.language.getChangePw_ConfirmPwError());
+			playerEntity.sendMessage(ConfigManager.getLanguage().getChangePw_ConfirmPwError());
 			return;
 		}
 		
 		//判断新密码是否与旧密码一致
 		if(NewPasswd.equalsIgnoreCase(OldPasswd)){
-			playerEntity.sendMessage(FUtil.language.getReModifyPasswd());
+			playerEntity.sendMessage(ConfigManager.getLanguage().getReModifyPasswd());
 			return;
 		}
 		
@@ -93,8 +93,8 @@ public class PlayerPasswordProcess {
 		PDE.setPassword(NewPasswd);
 		PDE.setLogin(false);
 		
-		playerEntity.sendMessage(FUtil.language.getChangePw_Success());
-		playerEntity.sendMessage(FUtil.language.getLoginOut());
+		playerEntity.sendMessage(ConfigManager.getLanguage().getChangePw_Success());
+		playerEntity.sendMessage(ConfigManager.getLanguage().getLoginOut());
 		
 		//同步至数据库
 		playerDataBLL.updatePlayerData(PDE);
@@ -114,24 +114,24 @@ public class PlayerPasswordProcess {
 	public void ChangePasswdMD5(Player playerEntity, String OldPasswd, String NewPasswd,String ConfirmNewPasswd) {
 		
 		
-		PlayerDataEntity PDE = playerDataBLL.getPlayerData(playerEntity);
+		PlayerEntity PDE = playerDataBLL.getPlayerData(playerEntity);
 		
 		
 		//判断输入的旧密码是否正确
 		if( ! PDE.getPassword().equals(APH.autoCompression(OldPasswd))){
-			playerEntity.sendMessage(FUtil.language.getChangePw_OldpwErr());
+			playerEntity.sendMessage(ConfigManager.getLanguage().getChangePw_OldpwErr());
 			return;
 		}
 		
 		//判断两次输入的密码是否一致
 		if(!(NewPasswd.equals(ConfirmNewPasswd))){
-			playerEntity.sendMessage(FUtil.language.getChangePw_ConfirmPwError());
+			playerEntity.sendMessage(ConfigManager.getLanguage().getChangePw_ConfirmPwError());
 			return;
 		}
 		
 		//判断新密码是否与旧密码一致
 		if(NewPasswd.equalsIgnoreCase(OldPasswd)){
-			playerEntity.sendMessage(FUtil.language.getReModifyPasswd());
+			playerEntity.sendMessage(ConfigManager.getLanguage().getReModifyPasswd());
 			return;
 		}
 		
@@ -140,8 +140,8 @@ public class PlayerPasswordProcess {
 		PDE.setPassword(APH.autoCompression(NewPasswd));
 		PDE.setLogin(false);
 		
-		playerEntity.sendMessage(FUtil.language.getChangePw_Success());
-		playerEntity.sendMessage(FUtil.language.getLoginOut());
+		playerEntity.sendMessage(ConfigManager.getLanguage().getChangePw_Success());
+		playerEntity.sendMessage(ConfigManager.getLanguage().getLoginOut());
 		
 		//同步至数据库
 		playerDataBLL.updatePlayerData(PDE);
@@ -160,13 +160,13 @@ public class PlayerPasswordProcess {
 	
 	
 	/**用于判断玩家提供的密码是否正确**/
-	public boolean isRightPassword(PlayerDataEntity PDE,String password){
+	public boolean isRightPassword(PlayerEntity PDE,String password){
 		
 		
-		String Hash = FUtil.config.getEnable_passwordHash();
+		String Hash = ConfigManager.getConfig().getEnable_passwordHash();
 		
 		
-		Boolean isSupportOldpwd = FUtil.config.isEnable_SupportOldPassword();
+		Boolean isSupportOldpwd = ConfigManager.getConfig().isEnable_SupportOldPassword();
 		
 		String SaltPassword = password;
 		
@@ -223,7 +223,7 @@ public class PlayerPasswordProcess {
 	
 	
 	/**用于升级玩家的旧密码**/
-	public void updatePlayerPassword(PlayerDataEntity PDE,String Password){
+	public void updatePlayerPassword(PlayerEntity PDE,String Password){
 		
 		
 	
