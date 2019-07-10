@@ -35,7 +35,7 @@ public class FastLogin extends JavaPlugin {
 	
 	private static PlayerEffectManager playerEffectManager = null;
 	
-	private static final String Version="0.45-A-R9";
+	private static final String Version="0.45-B-R1";
 	
 	public FastLogin(){
 				
@@ -54,7 +54,6 @@ public class FastLogin extends JavaPlugin {
 		System.out.println("[FastLogin]°§:≤‚ ‘∞Ê");
 		
 		FastLogin_init.init();
-		
 		
 		FUtil.MainClass=this;
 		

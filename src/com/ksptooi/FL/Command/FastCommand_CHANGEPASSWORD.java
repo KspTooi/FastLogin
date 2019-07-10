@@ -3,18 +3,15 @@ package com.ksptooi.FL.Command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import com.ksptooi.FL.BukkitSupport.FastLogin;
 import com.ksptooi.FL.Data.Config.ConfigManager;
-import com.ksptooi.FL.PlayerProcess.PlayerPasswordProcess;
+import com.ksptooi.FL.Data.Player.Entity.FastPlayer;
 
 public class FastCommand_CHANGEPASSWORD implements FastCommand{
 
 	@Override
 	public void executeCommand(CommandSender sender, Command cmd, String[] args) {
 		
-		
-			PlayerPasswordProcess pwdProcess=new PlayerPasswordProcess();
 			
 			
 			if(!(sender instanceof Player)){
@@ -22,7 +19,8 @@ public class FastCommand_CHANGEPASSWORD implements FastCommand{
 				return;
 			}
 			
-			Player pl=(Player) sender;
+			
+			FastPlayer pl =new FastPlayer((Player) sender);
 			
 			
 			// ‰»Î¥ÌŒÛ√¸¡Ó ±∑¢ÀÕ∞Ô÷˙Œƒµµ
@@ -31,7 +29,10 @@ public class FastCommand_CHANGEPASSWORD implements FastCommand{
 				return;
 			}
 						
-			pwdProcess.ChangePasswd(pl, args[0], args[1], args[2]);			
+			
+			pl.ChangePasswd(args[0], args[1], args[2]);
+			
+			pl.save();
 		
 	}
 

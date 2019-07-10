@@ -1,5 +1,4 @@
-package com.ksptooi.FL.Thread.Player;
-
+package com.ksptooi.FL.Event.FastEvent;
 
 import com.ksptooi.FL.Data.Config.ConfigManager;
 import com.ksptooi.FL.Data.Player.Entity.FastPlayer;
@@ -9,9 +8,8 @@ import com.ksptooi.FL.General.Performance.PerformanceMonitorManager;
 import com.ksptooi.FL.PAsync.Task.AsyncTask;
 import com.ksptooi.FL.Util.FUtil;
 
+public class PlayerTelemetryEvent implements FastEvent{
 
-public class PlayerLoginMessageSendThread implements Runnable{
-	
 	
 	FastPlayer pl=null;
 	int LoginTime=0;
@@ -21,16 +19,19 @@ public class PlayerLoginMessageSendThread implements Runnable{
 	
 	PlayerData_Interface playerDataBLL=null;
 	
-	public PlayerLoginMessageSendThread(FastPlayer pl) {
+	public PlayerTelemetryEvent(FastPlayer pl) {
 		this.pl=pl;		
 		playerDataBLL=new PlayerDataManager();
 		AMVAP = new AsyncTask();
 
 	}
 	
-	
-	public void run(){
-
+	@Override
+	public void run() {
+		
+		
+		
+		
 		//添加线程性能计数
 		PerformanceMonitorManager.addPATC();
 		
@@ -116,9 +117,8 @@ public class PlayerLoginMessageSendThread implements Runnable{
 		
 		//清除线程性能计数
 		PerformanceMonitorManager.removePATC();
-		
+			
 		
 	}
-	
 
 }

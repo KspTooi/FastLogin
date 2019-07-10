@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import com.ksptooi.FL.BukkitSupport.FastLogin;
 import com.ksptooi.FL.Data.Config.ConfigManager;
 import com.ksptooi.FL.Data.Player.Entity.FastPlayer;
-import com.ksptooi.FL.PlayerProcess.PlayerPasswordProcess;
+import com.ksptooi.FL.Player.Check.PlayerPasswordRuleCheck;
 import com.ksptooi.FL.Util.FUtil;
 
 public class PlayerRegisterEvent implements FastEvent{
@@ -24,7 +24,7 @@ public class PlayerRegisterEvent implements FastEvent{
 		
 		try {
 
-			PlayerPasswordProcess playerPwdProcess = new PlayerPasswordProcess();
+			PlayerPasswordRuleCheck playerPwdProcess = new PlayerPasswordRuleCheck();
 
 			String Passwd = null;
 			String ConfirmPasswd = null;
@@ -53,7 +53,7 @@ public class PlayerRegisterEvent implements FastEvent{
 			}
 
 			// ºÏ≤È√‹¬Î≥§∂»
-			if (!playerPwdProcess.passWordLengthIsAccess(pl, ConfirmPasswd)) {
+			if (!playerPwdProcess.pwdIsValid(pl, ConfirmPasswd)) {
 
 				return;
 			}

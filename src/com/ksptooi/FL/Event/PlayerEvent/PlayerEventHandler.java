@@ -27,10 +27,9 @@ import com.ksptooi.FL.Data.Player.Entity.FastPlayer;
 import com.ksptooi.FL.Data.Player.Entity.PlayerData;
 import com.ksptooi.FL.Data.PlayerData.PlayerDataManager;
 import com.ksptooi.FL.Data.PlayerData.PlayerData_Interface;
+import com.ksptooi.FL.Event.FastEvent.PlayerJo1nEvent;
+import com.ksptooi.FL.Player.Check.PlayerNameRuleCheck;
 import com.ksptooi.FL.Player.Effect.PlayerEffectManager;
-import com.ksptooi.FL.PlayerProcess.PlayerNameProcess;
-import com.ksptooi.FL.Thread.Player.PlayerLoginMessageSendThread;
-import com.ksptooi.FL.Util.FUtil;
 import com.ksptooi.FL.Util.Logger;
 import com.ksptooi.FL.security.PlayerFilter;
 
@@ -39,7 +38,7 @@ public class PlayerEventHandler implements Listener{
 
 	Logger lm=null;
 	PlayerData_Interface PDB=null;
-	PlayerNameProcess playerNameProcess=null;
+	PlayerNameRuleCheck playerNameProcess=null;
 	PlayerFilter PF=null;
 	Logger logManager=null;
 	PlayerEffectManager PEP=null;
@@ -47,7 +46,7 @@ public class PlayerEventHandler implements Listener{
 	public PlayerEventHandler(){
 		lm=new Logger();
 		PDB=new PlayerDataManager();
-		playerNameProcess=new PlayerNameProcess();
+		playerNameProcess=new PlayerNameRuleCheck();
 		PF=new PlayerFilter();
 		logManager = new Logger();
 		PEP = new PlayerEffectManager();
@@ -77,50 +76,13 @@ public class PlayerEventHandler implements Listener{
 	
 		FastPlayer pl = new FastPlayer(event.getPlayer());
 		
-		
-		//验证是否为realPlayer
-		if(!PF.isRealPlayer(pl)){
-			return;
-		}
-		
-		//清除玩家数据缓存
-		PlayerDataCache.removePlayerData(pl.getName());
-			
-		
-		//初始化玩家属性
-		pl.createData();
-		
-		
-		pl.setLogin(false);
-		
-		pl.save();
-		
 		event.setJoinMessage(lm.GenJoinedMessage(pl));
 		
-		pl.tpFastSpawn();
 		
+		//调用FastEvent
+		PlayerJo1nEvent eve = new PlayerJo1nEvent(pl);
+		FastLogin.getEventManager().runFastEvent(eve);
 		
-		//OP安全检测
-		FUtil.LS.joinServer_OpSecurityProcess(pl);
-		//创造安全检测
-		FUtil.LS.joinServer_CreativeSecurityProcess(pl);
-		
-		
-		//玩家名称检测
-		if(! playerNameProcess.playerNameIsAccess(pl)){
-			return;
-		}
-		
-		//为玩家添加失明效果
-		pl.addPreLoginEffect();
-		
-		//添加Online列表
-		FastLogin.addOnlinePlayer(pl.getName(), pl);
-		
-		
-		//全部通过则开启一个玩家登录监测线程
-		new Thread(new PlayerLoginMessageSendThread(pl)).start();
-
 	}
 		
 
@@ -371,7 +333,7 @@ public class PlayerEventHandler implements Listener{
 		event.setQuitMessage(lm.GenQuitMessage(pl));
 		
 		
-		if (!playerNameProcess.playerNameIsAccess(pl)) {
+		if (!playerNameProcess.nameValid(pl)) {
 			return;
 		}
 		

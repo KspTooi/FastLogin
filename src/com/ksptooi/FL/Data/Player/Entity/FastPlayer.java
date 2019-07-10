@@ -12,7 +12,9 @@ import com.ksptooi.FL.Data.Config.ConfigManager;
 import com.ksptooi.FL.Data.Hash.PasswordHash;
 import com.ksptooi.FL.Data.Manager.DataManager;
 import com.ksptooi.FL.Data.PlayerData.PlayerDataManager;
+import com.ksptooi.FL.Event.FastEvent.PlayerTelemetryEvent;
 import com.ksptooi.FL.PAsync.Task.AsyncTask;
+import com.ksptooi.FL.Player.Check.PlayerPasswordRuleCheck;
 import com.ksptooi.FL.Player.Effect.PlayerEffectManager;
 import com.ksptooi.FL.Util.Logger;
 
@@ -43,6 +45,7 @@ public class FastPlayer{
 		this.effectManager = FastLogin.getPlayerEffectManager();
 		
 		this.passwordHash = DataManager.getAdvPasswordHash();
+		
 		
 		//获取数据	
 		playerData = playerDataManager.getPlayerData(pl);
@@ -92,9 +95,15 @@ public class FastPlayer{
 		this.playerData.setRegister(bool);
 	}
 	
-	//添加登陆粒子徐熬过
+	//添加登陆粒子效果过
 	public void addLoginedEffect() {
 		this.effectManager.addLoginedEffect(bukkitPlayer);
+	}
+	
+	//获取密码
+	public String getPassword() {
+		this.reload();
+		return this.playerData.getPassword();
 	}
 	
 	
@@ -111,10 +120,12 @@ public class FastPlayer{
 	
 	
 	public boolean isLogin() {
+		this.reload();
 		return playerData.isLogin();
 	}
 	
 	public boolean isRegister() {
+		this.reload();
 		return playerData.isRegister();
 	}
 	
@@ -179,8 +190,7 @@ public class FastPlayer{
 		
 		Logger logger = FastLogin.getLoggerr();
 		
-		
-		
+			
 		//使用MD5
 		if(Hash.equalsIgnoreCase("MD5")){
 			
@@ -235,6 +245,104 @@ public class FastPlayer{
 
 	}
 	
+	
+	/**
+	 * 更改玩家的密码
+	 * 
+	 * @param PlayerData 玩家实例
+	 * @param OldPasswd 原密码
+	 * @param NewPasswd 新密码
+	 * @param ConfirmNewPasswd 确认新密码
+	 */
+	public void ChangePasswd(String OldPasswd, String NewPasswd,String ConfirmNewPasswd) {
+		
+		PlayerPasswordRuleCheck passwordRuleCheck = DataManager.getPlayerPasswordRuleCheck();
+		
+		//判断有无加密
+		if(ConfigManager.getConfig().getEnable_passwordHash().equalsIgnoreCase("md5")){
+			this.ChangePasswdMD5(OldPasswd, NewPasswd, ConfirmNewPasswd);
+			return;
+		}	
+		
+		this.reload();
+			
+		//检查密码规则
+		if(!passwordRuleCheck.isValid(this, OldPasswd, NewPasswd, ConfirmNewPasswd)) {
+			return;
+		}
+		
+
+			
+		/** 更改密码 - 开始 **/
+		this.setPassword(NewPasswd);
+		this.setLogin(false);
+		
+		this.sendMessage(ConfigManager.getLanguage().getChangePw_Success());
+		this.sendMessage(ConfigManager.getLanguage().getLoginOut());
+		
+		//同步至数据库
+		this.save();
+		
+		
+		PlayerTelemetryEvent event=new PlayerTelemetryEvent(this);
+		FastLogin.getEventManager().runFastEvent(event);
+		
+	}
+
+	
+	/**
+	 * 更改玩家的密码 - 加密适用
+	 */
+	
+	public void ChangePasswdMD5(String OldPasswd, String NewPasswd,String ConfirmNewPasswd) {
+		
+		PlayerPasswordRuleCheck passwordRuleCheck = DataManager.getPlayerPasswordRuleCheck();
+		
+		this.reload();
+		
+		//检查密码规则
+		if(!passwordRuleCheck.isValidMD5(this, OldPasswd, NewPasswd, ConfirmNewPasswd)) {
+			return;
+		}
+		
+		/** 更改密码 - 开始 **/
+		
+		this.setPassword(passwordHash.autoCompression(NewPasswd));
+		this.setLogin(false);
+		
+		this.sendMessage(ConfigManager.getLanguage().getChangePw_Success());
+		this.sendMessage(ConfigManager.getLanguage().getLoginOut());
+		
+		//同步至数据库
+		this.save();
+			
+		PlayerTelemetryEvent event=new PlayerTelemetryEvent(this);
+		FastLogin.getEventManager().runFastEvent(event);
+		
+	}
+	
+	
+	//判断玩家是否为真的玩家 而不是其他实体
+	public boolean isRealPlayer(){
+		
+		String Address=null;
+		
+		try{
+			
+			Address=this.getAddress().getHostName();
+			
+			if(Address == null) {
+				return false;
+			}
+			
+			return true;
+			
+			
+		}catch(Exception exc){
+			return false;
+		}
+			
+	}
 	
 	
 	

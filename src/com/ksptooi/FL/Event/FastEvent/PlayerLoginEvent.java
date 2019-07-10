@@ -6,8 +6,8 @@ import com.ksptooi.FL.Data.Config.Entity.Language;
 import com.ksptooi.FL.Data.Manager.DataManager;
 import com.ksptooi.FL.Data.Player.Entity.FastPlayer;
 import com.ksptooi.FL.Data.PlayerData.PlayerDataManager;
+import com.ksptooi.FL.Player.Check.PlayerPasswordRuleCheck;
 import com.ksptooi.FL.Player.Effect.PlayerEffectManager;
-import com.ksptooi.FL.PlayerProcess.PlayerPasswordProcess;
 
 public class PlayerLoginEvent implements FastEvent{
 
@@ -15,7 +15,7 @@ public class PlayerLoginEvent implements FastEvent{
 	FastPlayer pl = null;
 	String[] param = null;
 	PlayerDataManager pdm = null;
-	PlayerPasswordProcess PlayerPasswordProcess = null;
+	PlayerPasswordRuleCheck PlayerPasswordProcess = null;
 	Language lang = null;
 	PlayerEffectManager playerEffectManager = null;
 	
@@ -25,7 +25,7 @@ public class PlayerLoginEvent implements FastEvent{
 		this.pl=pl;
 		this.param=args;
 		this.pdm = DataManager.getPlayerDataManager();
-		this.PlayerPasswordProcess = new PlayerPasswordProcess();	
+		this.PlayerPasswordProcess = new PlayerPasswordRuleCheck();	
 		this.lang = ConfigManager.getLanguage();
 		this.playerEffectManager = FastLogin.getPlayerEffectManager();
 	}
