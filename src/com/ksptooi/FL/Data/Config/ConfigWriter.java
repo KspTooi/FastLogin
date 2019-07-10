@@ -36,7 +36,7 @@ public class ConfigWriter {
 			
 			ds.addline(" ");			
 			ds.addline("#ª˘±æ≈‰÷√\r\n" + 
-					"ConfigVersion=0.43-D-RE\r\n" + 
+					"ConfigVersion="+FUtil.Version+"\r\n" + 
 					"PlayerDataType=GeneralDataCore\r\n" + 
 					"LoginTimeOut=60\r\n" + 
 					"PasswordMaxLength=15\r\n" + 

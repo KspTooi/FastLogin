@@ -3,9 +3,8 @@ package com.ksptooi.FL.Command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
 import com.ksptooi.FL.BukkitSupport.FastLogin;
-import com.ksptooi.FL.playerThread.PlayerLoginThread;
+import com.ksptooi.FL.Event.FastEvent.PlayerLoginEvent;
 
 public class FastCommand_LOGIN implements FastCommand{
 
@@ -21,7 +20,12 @@ public class FastCommand_LOGIN implements FastCommand{
 			
 			Player pl=(Player) sender;
 			
-			new Thread(new PlayerLoginThread(pl,args)).start();
+			
+			PlayerLoginEvent ple=new PlayerLoginEvent(pl, args);
+			
+			FastLogin.getEventManager().runEvent(ple);	
+			
+//			new Thread(new PlayerLoginThread(pl,args)).start();
 			
 	}
 	

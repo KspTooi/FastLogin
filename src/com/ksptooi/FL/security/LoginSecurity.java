@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import com.ksptooi.FL.Data.Config.ConfigManager;
 import com.ksptooi.FL.Data.Player.Entity.PlayerEntity;
 import com.ksptooi.FL.Data.PlayerData.PlayerData_Interface;
-import com.ksptooi.FL.Process.Player.PlayerAsyncProcess;
+import com.ksptooi.FL.Player.Async.PlayerAsyncProcess;
 import com.ksptooi.FL.Data.PlayerData.PlayerDataManager;
 
 public class LoginSecurity {
@@ -17,13 +17,13 @@ public class LoginSecurity {
 	private ArrayList<String> creativeList=null;
 	
 	PlayerData_Interface PDBI=null;
-	PlayerAsyncProcess AMVAP = null;
+	PlayerAsyncProcess asyncProcess = null;
 	
 	public LoginSecurity(){
 		opList = new ArrayList<String>();
 		creativeList = new ArrayList<String>();		
 		PDBI=new PlayerDataManager();
-		AMVAP = new PlayerAsyncProcess();
+		asyncProcess = new PlayerAsyncProcess();
 	}
 	
 	
@@ -71,7 +71,7 @@ public class LoginSecurity {
 			
 			if(opList.get(i).equals(name)){
 				
-				pl.setOp(true);
+				asyncProcess.AsyncSetOP(pl, true);
 				pl.sendMessage(ConfigManager.getLanguage().getOPRestore());
 				opList.remove(i);
 			}
@@ -98,7 +98,7 @@ public class LoginSecurity {
 		//ÅÐ¶ÏÍæ¼ÒÊÇ·ñ×¢²á
 		if(! PDE.isRegister()){
 			pl.sendMessage(ConfigManager.getLanguage().getCreativeHasBeenCleared());	
-			AMVAP.AsyncSetPlayerGameMode(pl, 0);
+			asyncProcess.AsyncSetPlayerGameMode(pl, 0);
 			pl.setGameMode(GameMode.SURVIVAL);
 			return;
 		}
@@ -106,7 +106,7 @@ public class LoginSecurity {
 		//ÊÇ·ñµÇÂ¼
 		if(! PDE.isLogin()){
 			pl.sendMessage(ConfigManager.getLanguage().getCreativeModeHasbeenCanceld());	
-			AMVAP.AsyncSetPlayerGameMode(pl, 0);
+			asyncProcess.AsyncSetPlayerGameMode(pl, 0);
 			creativeList.add(pl.getName());
 			return;
 		}
@@ -122,7 +122,7 @@ public class LoginSecurity {
 			
 			if(creativeList.get(i).equals(name)){
 				
-				AMVAP.AsyncSetPlayerGameMode(pl, 1);
+				asyncProcess.AsyncSetPlayerGameMode(pl, 1);
 		
 				pl.sendMessage(ConfigManager.getLanguage().getCreativeModeRestore());
 				creativeList.remove(i);

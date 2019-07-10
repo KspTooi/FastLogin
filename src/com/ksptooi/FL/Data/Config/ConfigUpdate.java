@@ -17,17 +17,16 @@ public class ConfigUpdate {
 	
 	
 	
-	
 	public void updateConfig(){
 		
 		String FastLoginVersion = FUtil.Version;
-		
-		String ConfigVersion = ConfigManager.getConfig().getConfigVersion();
-		
+			
 		
 		logManager.logInfo("检查配置版本");
 		
 		try{
+			
+			String ConfigVersion = ConfigManager.getConfig().getConfigVersion();
 			
 			//判断配置文件版本
 			if(!ConfigVersion.equals(FastLoginVersion)){
@@ -39,7 +38,7 @@ public class ConfigUpdate {
 				
 				logManager.logWarning("配置文件版本不符");
 				
-				Config.renameTo(OldConfig);				
+				Config.renameTo(OldConfig);			
 				
 				logManager.logInfo("更新配重项");
 				

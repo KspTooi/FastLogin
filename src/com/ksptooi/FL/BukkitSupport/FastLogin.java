@@ -11,15 +11,16 @@ import com.ksptooi.FL.Command.CommandManager;
 import com.ksptooi.FL.Data.Config.ConfigManager;
 import com.ksptooi.FL.Data.PlayerData.PlayerDataManager;
 import com.ksptooi.FL.Data.PlayerData.PlayerSqlDataManager;
-import com.ksptooi.FL.Process.Player.PlayerAsyncProcess;
+import com.ksptooi.FL.Event.FastEvent.EventManager;
+import com.ksptooi.FL.Event.PlayerEvent.PlayerEventHandler;
+import com.ksptooi.FL.General.Init.FastLogin_init;
+import com.ksptooi.FL.Player.Async.PlayerAsyncProcess;
+import com.ksptooi.FL.Player.Effect.PlayerEffectManager;
 import com.ksptooi.FL.Util.FUtil;
 import com.ksptooi.FL.Util.Logger;
-import com.ksptooi.FL.playerEvent.PlayerEventHandler;
-import com.ksptooi.FL.start.FastLogin_init;
 
 public class FastLogin extends JavaPlugin {
 
-	
 	BukkitCommandHandler bukkitCommandHandler=null;
 	
 	private static CommandManager commandManager=null;
@@ -31,6 +32,10 @@ public class FastLogin extends JavaPlugin {
 	private static HashMap<String,Player> listOnlinePlayer = null;
 	
 	private static PlayerAsyncProcess playerAsyncProcess = null;
+		
+	private static EventManager eventManager = null;
+	
+	private static PlayerEffectManager playerEffectManager = null;
 	
 	public FastLogin(){
 				
@@ -39,12 +44,15 @@ public class FastLogin extends JavaPlugin {
 		playerDataManager = new PlayerDataManager();
 		listOnlinePlayer = new HashMap<String,Player>();
 		playerAsyncProcess = new PlayerAsyncProcess();
+		eventManager = new EventManager();
+		playerEffectManager = new PlayerEffectManager();
 	}
 	
 	public void onEnable(){
 		
 		System.out.println("[FastLogin]°æ±¾:"+FUtil.Version);
 		
+		System.out.println("[FastLogin]¡¤:²âÊÔ°æ");
 		
 		FastLogin_init.init();
 		
@@ -96,12 +104,18 @@ public class FastLogin extends JavaPlugin {
 		return playerAsyncProcess;
 	}
 	
+	
+	public static EventManager getEventManager() {
+		return eventManager;
+	}
+	
+	public static PlayerEffectManager getPlayerEffectManager() {
+		return playerEffectManager;
+	}
+	
 	//½øÐÐÃüÁî´«µÝ
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){							
 		return bukkitCommandHandler.onCommand(sender, cmd, label, args);
 	}
-	
-
-	
 	
 }

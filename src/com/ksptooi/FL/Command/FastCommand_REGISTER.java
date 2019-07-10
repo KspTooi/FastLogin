@@ -5,7 +5,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import com.ksptooi.FL.BukkitSupport.FastLogin;
-import com.ksptooi.FL.playerThread.PlayerRegThread;
+import com.ksptooi.FL.Event.FastEvent.PlayerRegisterEvent;
 
 public class FastCommand_REGISTER implements FastCommand{
 
@@ -21,7 +21,12 @@ public class FastCommand_REGISTER implements FastCommand{
 			
 			Player pl =(Player)sender;
 			
-			new Thread(new PlayerRegThread(pl,args)).start();
+			//提交注册事件
+			PlayerRegisterEvent ple=new PlayerRegisterEvent(pl, args);
+			
+			FastLogin.getEventManager().runEvent(ple);	
+			
+//			new Thread(new PlayerRegThread(pl,args)).start();
 			
 		}
 		

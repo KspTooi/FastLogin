@@ -22,13 +22,6 @@ public class FastCommand_SETPASSWORD implements FastCommand{
 		Language lang = ConfigManager.getLanguage();
 		
 		
-			
-			if(!(sender.isOp())){
-			    sender.sendMessage("只有OP才能使用此命令");
-			    return;
-			}
-			
-			
 			if(args.length<3){
 				sender.sendMessage(lang.getAdminSetPasswordUsage());
 				return;

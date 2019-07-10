@@ -10,7 +10,7 @@ import com.ksptooi.FL.Data.Config.ConfigManager;
 import com.ksptooi.FL.Data.Manager.DataManager;
 import com.ksptooi.FL.Data.Player.Cache.PlayerDataCache;
 import com.ksptooi.FL.Data.Player.Entity.PlayerEntity;
-import com.ksptooi.FL.Performance.PerformanceMonitorManager;
+import com.ksptooi.FL.General.Performance.PerformanceMonitorManager;
 import com.ksptooi.FL.Util.Logger;
 import com.ksptooi.gdc.v6.Factory.DataSessionFactory;
 import com.ksptooi.gdc.v6.Session.dataSession;
@@ -25,8 +25,10 @@ public class PlayerDataIO implements PlayerDataIO_Interfrace{
 	
 	public PlayerDataIO(){
 		
-		DataManager.getDataSessionFactory();
 		LM=new Logger();
+		dataSessionFactory = DataManager.getDataSessionFactory();
+		
+		
 	}
 	
 	
@@ -44,9 +46,9 @@ public class PlayerDataIO implements PlayerDataIO_Interfrace{
 			
 			LM.logInfo("·为玩家创建新的数据文件:"+playerName+".gd");
 			
-			dataSession ds = dataSessionFactory.openSession(playerDataFile);
-			
 			dataSessionFactory.createdata(playerDataFile);
+			
+			dataSession ds = dataSessionFactory.openSession(playerDataFile);
 			
 			ds.addline("playername=" + playerName);
 			ds.addline("password=#");
@@ -85,14 +87,12 @@ public class PlayerDataIO implements PlayerDataIO_Interfrace{
 		PerformanceMonitorManager.addPFPC();
 			
 		
-		File playerDataFile = this.getPlayerDataFile(playerName);
+		File playerDataFile = this.getPlayerDataFile(playerName.toLowerCase());
 		
 		PlayerEntity pde=new PlayerEntity();
 		
 		
 		dataSession ds = dataSessionFactory.openSession(playerDataFile);
-		
-			
 		
 		pde.setPlayername(ds.get("playername"));
 		pde.setPassword(ds.get("password"));

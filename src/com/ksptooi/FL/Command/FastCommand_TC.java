@@ -3,7 +3,7 @@ package com.ksptooi.FL.Command;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-import com.ksptooi.FL.Performance.PerformanceMonitorManager;
+import com.ksptooi.FL.General.Performance.PerformanceMonitorManager;
 
 public class FastCommand_TC implements FastCommand{
 

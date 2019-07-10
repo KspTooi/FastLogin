@@ -1,7 +1,8 @@
-package com.ksptooi.FL.Process.Player;
+package com.ksptooi.FL.Player.Async;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -25,6 +26,41 @@ public class PlayerAsyncProcess {
 		});
 		
 	}
+	
+	//异步TP
+	public void AsyncTP(Player pl,Location loc) {
+		
+		Bukkit.getScheduler().runTask(FUtil.MainClass, new Runnable() {
+
+			@Override
+			public void run() {
+				
+				pl.teleport(loc);
+				
+			}
+			
+		});	
+		
+	}
+	
+	
+	//异步设置op
+	public void AsyncSetOP(Player pl,Boolean bool) {
+		
+		Bukkit.getScheduler().runTask(FUtil.MainClass, new Runnable() {
+
+			@Override
+			public void run() {
+				
+				pl.setOp(bool);
+				
+			}
+			
+		});
+		
+		
+	}
+	
 	
 	
 	//异步转同步设置玩家的游戏模式

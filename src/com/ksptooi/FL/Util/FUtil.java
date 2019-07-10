@@ -17,9 +17,8 @@ import com.ksptooi.FL.security.RegsterIPCount;
 public class FUtil {
 		
 	//全局变量
-	public static final String Version="0.45-A";
+	public static final String Version="0.45-A-R7";
 	
-
 	
 //	public static final File fastLoginConfigFile=new File("F:\\1217/MineCraft Server/1.7.10[PT]/plugins/ksptooi/fastlogin/fastlogin.conf");
 	

@@ -30,13 +30,8 @@ public class FastCommand_CHANGEPASSWORD implements FastCommand{
 				pl.sendMessage(ConfigManager.getLanguage().getChangePwUsage());
 				return;
 			}
-			
-			
-			pwdProcess.ChangePasswd(pl, args[0], args[1], args[2]);
-				
-		
-		
-		
+						
+			pwdProcess.ChangePasswd(pl, args[0], args[1], args[2]);			
 		
 	}
 
