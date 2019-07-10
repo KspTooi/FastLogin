@@ -40,8 +40,6 @@ public class Config {
 	
 	private boolean Enable_OPSecurity=false;
 	
-	private boolean Enable_SecurityWarning=false;
-	
 	private boolean Enable_HellGateSecurity=false;
 	
 	private boolean Enable_PlayerLoginedEffect=true;
@@ -161,9 +159,6 @@ public class Config {
 		return Enable_OPSecurity;
 	}
 
-	public boolean isEnable_SecurityWarning() {
-		return Enable_SecurityWarning;
-	}
 
 	public boolean isEnable_HellGateSecurity() {
 		return Enable_HellGateSecurity;
@@ -331,10 +326,6 @@ public class Config {
 
 	public void setEnable_OPSecurity(boolean enable_OPSecurity) {
 		Enable_OPSecurity = enable_OPSecurity;
-	}
-
-	public void setEnable_SecurityWarning(boolean enable_SecurityWarning) {
-		Enable_SecurityWarning = enable_SecurityWarning;
 	}
 
 	public void setEnable_HellGateSecurity(boolean enable_HellGateSecurity) {

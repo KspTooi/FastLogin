@@ -1,22 +1,22 @@
 package com.ksptooi.FL.Player.Effect;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Effect;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import com.ksptooi.FL.BukkitSupport.FastLogin;
 import com.ksptooi.FL.Data.Config.ConfigManager;
-import com.ksptooi.FL.Player.Async.PlayerAsyncProcess;
-import com.ksptooi.FL.Util.FUtil;
+import com.ksptooi.FL.PAsync.Task.AsyncTask;
 
 public class PlayerEffectManager {
 
 	
-	PlayerAsyncProcess AMVAP=null;
-	
+	AsyncTask task=null;
 	
 	public PlayerEffectManager(){
-		AMVAP = new PlayerAsyncProcess();
+		task = FastLogin.getAsyncTask();
 	}
 	
 	
@@ -28,10 +28,16 @@ public class PlayerEffectManager {
 	public boolean addLoginedEffect(Player pl){
 		
 		if(ConfigManager.getConfig().isEnable_PlayerLoginedEffect()){
-			pl.getWorld().playEffect(pl.getLocation().add(-1, 1.0D, 1),Effect.ENDER_SIGNAL, 0);
-			pl.getWorld().playEffect(pl.getLocation().add(-1, 1.0D, -1),Effect.ENDER_SIGNAL, 0);
-			pl.getWorld().playEffect(pl.getLocation().add(1, 1.0D, 1),Effect.ENDER_SIGNAL, 0);
-			pl.getWorld().playEffect(pl.getLocation().add(1, 1.0D, -1),Effect.ENDER_SIGNAL, 0);
+			
+			World world = pl.getWorld();
+			Location loc = pl.getLocation();
+			
+			task.taskPlayEffect(world, loc.add(-1, 1.0D, 1), Effect.ENDER_SIGNAL);
+			task.taskPlayEffect(world, loc.add(-1, 1.0D, -1), Effect.ENDER_SIGNAL);
+			task.taskPlayEffect(world, loc.add(1, 1.0D, 1), Effect.ENDER_SIGNAL);
+			task.taskPlayEffect(world, loc.add(1, 1.0D, -1), Effect.ENDER_SIGNAL);
+			
+			
 			return true;
 		}
 		
@@ -49,7 +55,7 @@ public class PlayerEffectManager {
 		
 		if(ConfigManager.getConfig().isEnable_PlayerPreLoginEffect()){
 			
-			AMVAP.AsyncAddPotionEffect(pl, new PotionEffect(PotionEffectType.BLINDNESS , 150000, 1));
+			task.taskAddPotionEffect(pl, new PotionEffect(PotionEffectType.BLINDNESS , 150000, 1));
 			
 			return true;
 		}
@@ -66,14 +72,8 @@ public class PlayerEffectManager {
 		if(ConfigManager.getConfig().isEnable_PlayerPreLoginEffect()){
 			
 			
-			Bukkit.getScheduler().runTask(FUtil.MainClass, new Runnable() {
-
-				public void run() {
-					AMVAP.AsyncRemovePotionEffect(pl, PotionEffectType.BLINDNESS);
-				}
-
-			});
-
+			task.taskRemovePotionEffect(pl, PotionEffectType.BLINDNESS);
+			
 			
 			return true;
 		}

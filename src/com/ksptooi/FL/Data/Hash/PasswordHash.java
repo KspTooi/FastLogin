@@ -1,11 +1,11 @@
-package com.ksptooi.FL.security;
+package com.ksptooi.FL.Data.Hash;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import com.ksptooi.FL.Data.Config.ConfigManager;
 
-public class AdvPasswordHash {
+public class PasswordHash {
 
 	//根据插件配置文件 自动识别加密算法
 	public String autoCompression(String str){

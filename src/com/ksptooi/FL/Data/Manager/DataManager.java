@@ -1,7 +1,7 @@
 package com.ksptooi.FL.Data.Manager;
 
+import com.ksptooi.FL.Data.Hash.PasswordHash;
 import com.ksptooi.FL.Data.PlayerData.PlayerDataManager;
-import com.ksptooi.FL.security.AdvPasswordHash;
 import com.ksptooi.gdc.v6.Factory.*;
 import com.ksptooi.gdc.v6.Manager.GeneralDataFactoryBuilder;
 
@@ -12,7 +12,7 @@ public class DataManager {
 	
 	private static PlayerDataManager playerDataManager = null;
 	
-	private static AdvPasswordHash advPasswordHash = null;
+	private static PasswordHash advPasswordHash = null;
 	
 	static {
 		
@@ -22,7 +22,7 @@ public class DataManager {
 		
 		playerDataManager = new PlayerDataManager();
 		
-		advPasswordHash = new AdvPasswordHash();
+		advPasswordHash = new PasswordHash();
 		
 	}
 	
@@ -35,7 +35,7 @@ public class DataManager {
 		return dataSessionFactory;
 	}
 	
-	public static AdvPasswordHash getAdvPasswordHash() {
+	public static PasswordHash getAdvPasswordHash() {
 		return advPasswordHash;
 	}
 	

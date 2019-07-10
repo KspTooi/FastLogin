@@ -4,7 +4,7 @@ import java.io.File;
 
 import org.bukkit.entity.Player;
 
-import com.ksptooi.FL.Data.Player.Entity.PlayerEntity;
+import com.ksptooi.FL.Data.Player.Entity.PlayerData;
 
 public interface PlayerDataIO_Interfrace {
 	
@@ -19,17 +19,17 @@ public interface PlayerDataIO_Interfrace {
 	 * @param 玩家名
 	 * @return 返回一个PlayerDataEntity
 	 */
-	public PlayerEntity queryPlayerDataByName(String playerName);
+	public PlayerData queryPlayerDataByName(String playerName);
 	
 	//类似于queryPlayerData(String PlayerName)	
-	public PlayerEntity queryPlayerData(Player PlayerEntity);
+	public PlayerData queryPlayerData(Player PlayerEntity);
 	
 	/**
 	 * 更新玩家数据文件到GD
 	 * @param playerDataEntity
 	 * @return 成功返回true 失败返回false
 	 */
-	public boolean updatePlayerData(PlayerEntity playerDataEntity);
+	public boolean updatePlayerData(PlayerData playerDataEntity);
 	
 	/**
 	 * 获取玩家数据文件位置

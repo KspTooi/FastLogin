@@ -4,8 +4,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import com.ksptooi.FL.BukkitSupport.FastLogin;
+import com.ksptooi.FL.Data.Hash.PasswordHash;
 import com.ksptooi.FL.Util.Logger;
-import com.ksptooi.FL.security.AdvPasswordHash;
 
 
 public class BukkitCommandHandler{
@@ -14,7 +14,7 @@ public class BukkitCommandHandler{
 	Player pl=null;
 	Logger lm=null;
 
-	AdvPasswordHash APH=null;
+	PasswordHash APH=null;
 	
 	CommandManager commandManager = null;
 	
@@ -22,7 +22,7 @@ public class BukkitCommandHandler{
 	public BukkitCommandHandler(){
 		
 		lm=new Logger();
-		APH = new AdvPasswordHash();	
+		APH = new PasswordHash();	
 		commandManager = FastLogin.getCommandManager();
 		
 	}

@@ -3,13 +3,11 @@ package com.ksptooi.FL.security;
 import java.util.ArrayList;
 
 import org.bukkit.GameMode;
-import org.bukkit.entity.Player;
-
 import com.ksptooi.FL.Data.Config.ConfigManager;
-import com.ksptooi.FL.Data.Player.Entity.PlayerEntity;
-import com.ksptooi.FL.Data.PlayerData.PlayerData_Interface;
-import com.ksptooi.FL.Player.Async.PlayerAsyncProcess;
+import com.ksptooi.FL.Data.Player.Entity.FastPlayer;
 import com.ksptooi.FL.Data.PlayerData.PlayerDataManager;
+import com.ksptooi.FL.Data.PlayerData.PlayerData_Interface;
+import com.ksptooi.FL.PAsync.Task.AsyncTask;
 
 public class LoginSecurity {
 
@@ -17,20 +15,20 @@ public class LoginSecurity {
 	private ArrayList<String> creativeList=null;
 	
 	PlayerData_Interface PDBI=null;
-	PlayerAsyncProcess asyncProcess = null;
+	AsyncTask asyncProcess = null;
 	
 	public LoginSecurity(){
 		opList = new ArrayList<String>();
 		creativeList = new ArrayList<String>();		
 		PDBI=new PlayerDataManager();
-		asyncProcess = new PlayerAsyncProcess();
+		asyncProcess = new AsyncTask();
 	}
 	
 	
 	
-	public void joinServer_OpSecurityProcess(Player pl){
+	public void joinServer_OpSecurityProcess(FastPlayer pl){
 		
-		PlayerEntity PD = PDBI.getPlayerData(pl);
+		pl.reload();
 		
 		//判断有没有开启OP安全
 		if(!ConfigManager.getConfig().isEnable_OPSecurity()){
@@ -45,14 +43,14 @@ public class LoginSecurity {
 		
 		
 		//如果玩家没有注册则清除他的OP
-		if( ! PD.isRegister()){
+		if( ! pl.isRegister()){
 			pl.sendMessage(ConfigManager.getLanguage().getOPHasBeenCleared());
 			pl.setOp(false);
 			return;
 		}
 			
 		//如果玩家没有登录则取消他的OP
-		if( ! PD.isLogin()){
+		if( ! pl.isLogin()){
 			pl.sendMessage(ConfigManager.getLanguage().getOPHasbeenCanceld());
 			opList.add(pl.getName());
 			pl.setOp(false);
@@ -63,7 +61,7 @@ public class LoginSecurity {
 	}
 	
 	
-	public void loginSuccess_OpSecurityProcess(Player pl){
+	public void loginSuccess_OpSecurityProcess(FastPlayer pl){
 		
 		String name=pl.getName();
 		
@@ -71,7 +69,7 @@ public class LoginSecurity {
 			
 			if(opList.get(i).equals(name)){
 				
-				asyncProcess.AsyncSetOP(pl, true);
+				pl.setOp(true);
 				pl.sendMessage(ConfigManager.getLanguage().getOPRestore());
 				opList.remove(i);
 			}
@@ -81,9 +79,9 @@ public class LoginSecurity {
 	}
 	
 	
-	public void joinServer_CreativeSecurityProcess(Player pl){
+	public void joinServer_CreativeSecurityProcess(FastPlayer pl){
 		
-		PlayerEntity PDE=PDBI.getPlayerData(pl);
+		pl.reload();
 		
 		//判断是否开启 CreativeModeSecurity
 		if(!ConfigManager.getConfig().isEnable_CreativeModeSecurity()){
@@ -96,17 +94,16 @@ public class LoginSecurity {
 		}
 		
 		//判断玩家是否注册
-		if(! PDE.isRegister()){
+		if(! pl.isRegister()){
 			pl.sendMessage(ConfigManager.getLanguage().getCreativeHasBeenCleared());	
-			asyncProcess.AsyncSetPlayerGameMode(pl, 0);
-			pl.setGameMode(GameMode.SURVIVAL);
+			pl.setGameMode(0);
 			return;
 		}
 		
 		//是否登录
-		if(! PDE.isLogin()){
+		if(! pl.isLogin()){
 			pl.sendMessage(ConfigManager.getLanguage().getCreativeModeHasbeenCanceld());	
-			asyncProcess.AsyncSetPlayerGameMode(pl, 0);
+			pl.setGameMode(0);
 			creativeList.add(pl.getName());
 			return;
 		}
@@ -114,7 +111,7 @@ public class LoginSecurity {
 	}
 	
 	
-	public void loginSuccess_CreativeSecurityProcess(Player pl){
+	public void loginSuccess_CreativeSecurityProcess(FastPlayer pl){
 		
 		String name=pl.getName();
 		
@@ -122,7 +119,8 @@ public class LoginSecurity {
 			
 			if(creativeList.get(i).equals(name)){
 				
-				asyncProcess.AsyncSetPlayerGameMode(pl, 1);
+				pl.setGameMode(1);
+				
 		
 				pl.sendMessage(ConfigManager.getLanguage().getCreativeModeRestore());
 				creativeList.remove(i);

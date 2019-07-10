@@ -1,8 +1,7 @@
 package com.ksptooi.FL.security;
 
-import org.bukkit.entity.Player;
-
 import com.ksptooi.FL.Data.Config.ConfigManager;
+import com.ksptooi.FL.Data.Player.Entity.FastPlayer;
 import com.ksptooi.FL.Util.Logger;
 import com.ksptooi.gdc.v5.Manager.IOController_V5;
 
@@ -16,7 +15,7 @@ public class RegsterIPCount {
 		logManager = new Logger();
 	}
 	
-	public boolean playerIp_isMaxReg(Player pl){
+	public boolean playerIp_isMaxReg(FastPlayer pl){
 		
 		String PlayerIP=pl.getAddress().getHostName();
 		v5.setTarget(ConfigManager.fastLoginIPCountFile);
@@ -45,7 +44,7 @@ public class RegsterIPCount {
 	}
 
 	
-	public void addIP(Player pl){
+	public void addIP(FastPlayer pl){
 		
 		//如果MaxRegisterIP是0则关闭这个功能
 		if(ConfigManager.getConfig().getMaxRegisterIP()==0){			

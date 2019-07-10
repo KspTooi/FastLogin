@@ -23,11 +23,11 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import com.ksptooi.FL.BukkitSupport.FastLogin;
 import com.ksptooi.FL.Data.Config.ConfigManager;
 import com.ksptooi.FL.Data.Player.Cache.PlayerDataCache;
-import com.ksptooi.FL.Data.Player.Entity.PlayerEntity;
+import com.ksptooi.FL.Data.Player.Entity.FastPlayer;
+import com.ksptooi.FL.Data.Player.Entity.PlayerData;
 import com.ksptooi.FL.Data.PlayerData.PlayerDataManager;
 import com.ksptooi.FL.Data.PlayerData.PlayerData_Interface;
 import com.ksptooi.FL.Player.Effect.PlayerEffectManager;
-import com.ksptooi.FL.PlayerProcess.PlayerLocationProcess;
 import com.ksptooi.FL.PlayerProcess.PlayerNameProcess;
 import com.ksptooi.FL.Thread.Player.PlayerLoginMessageSendThread;
 import com.ksptooi.FL.Util.FUtil;
@@ -39,7 +39,6 @@ public class PlayerEventHandler implements Listener{
 
 	Logger lm=null;
 	PlayerData_Interface PDB=null;
-	PlayerLocationProcess playerLocationProcess=null;
 	PlayerNameProcess playerNameProcess=null;
 	PlayerFilter PF=null;
 	Logger logManager=null;
@@ -48,7 +47,6 @@ public class PlayerEventHandler implements Listener{
 	public PlayerEventHandler(){
 		lm=new Logger();
 		PDB=new PlayerDataManager();
-		playerLocationProcess=new PlayerLocationProcess();
 		playerNameProcess=new PlayerNameProcess();
 		PF=new PlayerFilter();
 		logManager = new Logger();
@@ -77,8 +75,7 @@ public class PlayerEventHandler implements Listener{
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event){
 	
-		Player pl = event.getPlayer();
-		PlayerEntity PDE=null;
+		FastPlayer pl = new FastPlayer(event.getPlayer());
 		
 		
 		//验证是否为realPlayer
@@ -86,25 +83,21 @@ public class PlayerEventHandler implements Listener{
 			return;
 		}
 		
-
-		
 		//清除玩家数据缓存
-		PlayerDataCache.removePDE(pl.getName());
-		
+		PlayerDataCache.removePlayerData(pl.getName());
 			
 		
 		//初始化玩家属性
-		PDB.createPlayerData(pl.getName());
+		pl.createData();
 		
-		PDE=PDB.getPlayerData(pl.getName());
 		
-		PDE.setLogin(false);
+		pl.setLogin(false);
 		
-		PDB.updatePlayerData(PDE);
+		pl.save();
 		
 		event.setJoinMessage(lm.GenJoinedMessage(pl));
 		
-		playerLocationProcess.TelePort_DefaultLoginLocation(pl);
+		pl.tpFastSpawn();
 		
 		
 		//OP安全检测
@@ -119,7 +112,7 @@ public class PlayerEventHandler implements Listener{
 		}
 		
 		//为玩家添加失明效果
-		PEP.addPreLoginEffect(pl);
+		pl.addPreLoginEffect();
 		
 		//添加Online列表
 		FastLogin.addOnlinePlayer(pl.getName(), pl);
@@ -134,6 +127,9 @@ public class PlayerEventHandler implements Listener{
 	//移动	
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent event){
+		
+		
+		
 		
 		//验证是否为realPlayer
 		if(!PF.isRealPlayer(event.getPlayer())){
@@ -155,7 +151,7 @@ public class PlayerEventHandler implements Listener{
 		}
 		
 		
-		PlayerEntity PDE = PDB.getPlayerData(event.getPlayer());
+		PlayerData PDE = PDB.getPlayerData(event.getPlayer());
 		
 		
 		if(!PDE.isLogin()){
@@ -170,7 +166,7 @@ public class PlayerEventHandler implements Listener{
 	@EventHandler
 	public void onPlayerChat(AsyncPlayerChatEvent event){
 		
-		PlayerEntity PDE = PDB.getPlayerData(event.getPlayer());
+		PlayerData PDE = PDB.getPlayerData(event.getPlayer());
 		
 		if(!PDE.isLogin()){	
 			event.setCancelled(true);
@@ -188,7 +184,7 @@ public class PlayerEventHandler implements Listener{
 			return;
 		}
 		
-		PlayerEntity PDE = PDB.getPlayerData(event.getPlayer());
+		PlayerData PDE = PDB.getPlayerData(event.getPlayer());
 		
 		
 		if(!PDE.isLogin()){
@@ -216,7 +212,7 @@ public class PlayerEventHandler implements Listener{
 			return;
 		}	
 		
-		PlayerEntity PDE = PDB.getPlayerData(event.getPlayer());
+		PlayerData PDE = PDB.getPlayerData(event.getPlayer());
 		
 		
 		if(!PDE.isLogin()){
@@ -246,7 +242,7 @@ public class PlayerEventHandler implements Listener{
 		
 		
 		
-		PlayerEntity PDE = PDB.getPlayerData(pl);
+		PlayerData PDE = PDB.getPlayerData(pl);
 		
 		
 		if(!PDE.isLogin()){
@@ -274,7 +270,7 @@ public class PlayerEventHandler implements Listener{
 		Player pl=(Player)event.getEntity();
 		
 		
-		PlayerEntity PDE = null;
+		PlayerData PDE = null;
 		
 		try{
 			
@@ -312,7 +308,7 @@ public class PlayerEventHandler implements Listener{
 		
 		
 		
-		PlayerEntity PDE = PDB.getPlayerData(pl);
+		PlayerData PDE = PDB.getPlayerData(pl);
 		
 		
 		if(!PDE.isLogin()){
@@ -331,7 +327,7 @@ public class PlayerEventHandler implements Listener{
 		
 
 		
-		PlayerEntity PDE = PDB.getPlayerData(pl);
+		PlayerData PDE = PDB.getPlayerData(pl);
 		
 		
 		if(!PDE.isLogin()){
@@ -355,7 +351,7 @@ public class PlayerEventHandler implements Listener{
 		}
 		
 		
-		PlayerEntity PDE = PDB.getPlayerData(event.getPlayer());
+		PlayerData PDE = PDB.getPlayerData(event.getPlayer());
 		
 		
 		if(!PDE.isLogin()){
@@ -370,32 +366,32 @@ public class PlayerEventHandler implements Listener{
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 
-		event.setQuitMessage(lm.GenQuitMessage(event.getPlayer()));
+		FastPlayer pl =new FastPlayer(event.getPlayer());
+		
+		event.setQuitMessage(lm.GenQuitMessage(pl));
 		
 		
-		if (!playerNameProcess.playerNameIsAccess(event.getPlayer())) {
+		if (!playerNameProcess.playerNameIsAccess(pl)) {
 			return;
 		}
-
 		
-		PlayerEntity PDE = PDB.getPlayerData(event.getPlayer());
 		
 		//如果已经登录则保存一下用户的位置
-		if(PDE.isLogin()){
-			PDE.setLastQuitLocation(event.getPlayer().getLocation());
+		if(pl.isLogin()){
+			pl.saveQuitLocation();
 		}
 		
 		//移除Online列表
 		FastLogin.removeOnlinePlayer(event.getPlayer().getName());
 		
 		//将用户设置为未登录状态
-		PDE.setLogin(false);
+		pl.setLogin(false);
 		
 		//更新用户GD文件
-		PDB.updatePlayerData(PDE);
+		pl.save();
 		
 		//清理缓存
-		PlayerDataCache.removePDE(event.getPlayer().getName());
+		PlayerDataCache.removePlayerData(event.getPlayer().getName());
 
 	}
 	

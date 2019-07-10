@@ -1,8 +1,7 @@
 package com.ksptooi.FL.PlayerProcess;
 
-import org.bukkit.entity.Player;
-
 import com.ksptooi.FL.Data.Config.ConfigManager;
+import com.ksptooi.FL.Data.Player.Entity.FastPlayer;
 
 
 public class PlayerNameProcess {
@@ -14,7 +13,7 @@ public class PlayerNameProcess {
 	 * @param Player 玩家实体
 	 * @return 如果名称合法返回True 不合法返回False 并踢出玩家
 	 */
-	public boolean playerNameIsAccess(Player Player) {
+	public boolean playerNameIsAccess(FastPlayer Player) {
 		
 		
 		//判断玩家名称长度

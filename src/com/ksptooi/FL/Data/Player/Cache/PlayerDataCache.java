@@ -2,22 +2,22 @@ package com.ksptooi.FL.Data.Player.Cache;
 
 import java.util.ArrayList;
 
-import com.ksptooi.FL.Data.Player.Entity.PlayerEntity;
+import com.ksptooi.FL.Data.Player.Entity.PlayerData;
 
 public class PlayerDataCache {
 
-	private static ArrayList<PlayerEntity> PDEC = new ArrayList<PlayerEntity>();
+	private static ArrayList<PlayerData> listPlayerDataEntity = new ArrayList<PlayerData>();
 	
 	
 	
-	public static ArrayList<PlayerEntity> getPDEC(){
-		return PDEC;	
+	public static ArrayList<PlayerData> getPlayerDataList(){
+		return listPlayerDataEntity;	
 	}
 	
 	
-	public static boolean isExistsOfPDE(String PlayerName){
+	public static boolean isExistsOfPlayerData(String PlayerName){
 		
-		for(PlayerEntity PDE:PDEC){
+		for(PlayerData PDE:listPlayerDataEntity){
 			
 			if(PDE.getPlayername().equalsIgnoreCase(PlayerName)){
 				return true;
@@ -31,9 +31,9 @@ public class PlayerDataCache {
 	}
 
 	
-	public static PlayerEntity getPDE(String PlayerName){
+	public static PlayerData getPlayerData(String PlayerName){
 		
-		for(PlayerEntity PDE:PDEC){
+		for(PlayerData PDE:listPlayerDataEntity){
 			
 			if(PDE.getPlayername().equalsIgnoreCase(PlayerName)){
 				return PDE;
@@ -44,32 +44,32 @@ public class PlayerDataCache {
 		return null;
 	}
 	
-	public static void removePDE(String PlayerName){
+	public static void removePlayerData(String PlayerName){
 		
-		for(int i=0;i<PDEC.size();i++){
+		for(int i=0;i<listPlayerDataEntity.size();i++){
 			
-			if(PDEC.get(i).getPlayername().equalsIgnoreCase(PlayerName)){
+			if(listPlayerDataEntity.get(i).getPlayername().equalsIgnoreCase(PlayerName)){
 				
-				PDEC.remove(i);
+				listPlayerDataEntity.remove(i);
 			}		
 			
 		}	
 	}
 	
 	
-	public static boolean updatePDE(PlayerEntity PDE){
+	public static boolean updatePlayerData(PlayerData PDE){
 		
-		for(int i=0;i<PDEC.size();i++){
+		for(int i=0;i<listPlayerDataEntity.size();i++){
 			
-			if(PDEC.get(i).getPlayername().equalsIgnoreCase(PDE.getPlayername())){
+			if(listPlayerDataEntity.get(i).getPlayername().equalsIgnoreCase(PDE.getPlayername())){
 				
-				PDEC.set(i, PDE);			
+				listPlayerDataEntity.set(i, PDE);			
 				return true;
 			}					
 			
 		}
 		
-		PDEC.add(PDE);
+		listPlayerDataEntity.add(PDE);
 		return false;
 				
 	}

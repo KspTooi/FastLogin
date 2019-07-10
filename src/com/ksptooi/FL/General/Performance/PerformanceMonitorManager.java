@@ -24,7 +24,7 @@ public class PerformanceMonitorManager {
 	
 	public static int getPDECCount(){
 		
-		return PlayerDataCache.getPDEC().size();	
+		return PlayerDataCache.getPlayerDataList().size();	
 		
 	}
 	

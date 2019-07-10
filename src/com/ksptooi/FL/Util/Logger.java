@@ -1,9 +1,8 @@
 package com.ksptooi.FL.Util;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.ksptooi.FL.Data.Config.ConfigManager;
+import com.ksptooi.FL.Data.Player.Entity.FastPlayer;
 
 
 public class Logger{
@@ -24,7 +23,7 @@ public class Logger{
 	/**
 	 * 用于获取玩家加入信息
 	 */
-	public String GenJoinedMessage(Player pl) {
+	public String GenJoinedMessage(FastPlayer pl) {
 
 		String str=ConfigManager.getConfig().getPlayerJoinedMessage();
 		
@@ -43,7 +42,7 @@ public class Logger{
 	/**
 	 * 用于获取玩家退出信息
 	 */
-	public String GenQuitMessage(Player pl) {
+	public String GenQuitMessage(FastPlayer pl) {
 
 		String str=ConfigManager.getConfig().getPlayerQuitMessage();
 		
@@ -76,7 +75,7 @@ public class Logger{
 	/**
 	 * 用于玩家登录后的消息控制
 	 */
-	public void ShowMessage(Player pl) {
+	public void ShowMessage(FastPlayer pl) {
 		
 		
 		String ShowMessage="";

@@ -3,24 +3,25 @@ package com.ksptooi.FL.PlayerProcess;
 import org.bukkit.entity.Player;
 
 import com.ksptooi.FL.Data.Config.ConfigManager;
-import com.ksptooi.FL.Data.Player.Entity.PlayerEntity;
+import com.ksptooi.FL.Data.Hash.PasswordHash;
+import com.ksptooi.FL.Data.Player.Entity.FastPlayer;
+import com.ksptooi.FL.Data.Player.Entity.PlayerData;
 import com.ksptooi.FL.Data.PlayerData.PlayerDataManager;
 import com.ksptooi.FL.Data.PlayerData.PlayerData_Interface;
 import com.ksptooi.FL.Thread.Player.PlayerLoginMessageSendThread;
 import com.ksptooi.FL.Util.Logger;
-import com.ksptooi.FL.security.AdvPasswordHash;
 
 
 public class PlayerPasswordProcess {
 
 	PlayerData_Interface playerDataBLL=null;
-	AdvPasswordHash APH=null;
+	PasswordHash APH=null;
 	Logger logManager = null;
 	PlayerData_Interface PDBI=null;
 	
 	public PlayerPasswordProcess(){
 		playerDataBLL=new PlayerDataManager();
-		APH = new AdvPasswordHash();
+		APH = new PasswordHash();
 		logManager = new Logger();
 		PDBI = new PlayerDataManager();
 	}
@@ -31,7 +32,7 @@ public class PlayerPasswordProcess {
 	 * 
 	 * @param Passwd 要检查的密码
 	 */
-	public boolean passWordLengthIsAccess(Player pl,String Passwd){
+	public boolean passWordLengthIsAccess(FastPlayer pl,String Passwd){
 		
 		if(Passwd.length()>ConfigManager.getConfig().getPasswordMaxLength()){
 			pl.sendMessage(ConfigManager.getLanguage().getPasswdTooLong());
@@ -51,7 +52,7 @@ public class PlayerPasswordProcess {
 	/**
 	 * 更改玩家的密码
 	 * 
-	 * @param PlayerEntity 玩家实例
+	 * @param PlayerData 玩家实例
 	 * @param OldPasswd 原密码
 	 * @param NewPasswd 新密码
 	 * @param ConfirmNewPasswd 确认新密码
@@ -66,7 +67,7 @@ public class PlayerPasswordProcess {
 		}	
 		
 		
-		PlayerEntity PDE = playerDataBLL.getPlayerData(playerEntity);
+		PlayerData PDE = playerDataBLL.getPlayerData(playerEntity);
 		
 		
 		
@@ -100,7 +101,7 @@ public class PlayerPasswordProcess {
 		playerDataBLL.updatePlayerData(PDE);
 		
 		
-		new Thread(new PlayerLoginMessageSendThread(playerEntity)).start();
+		new Thread(new PlayerLoginMessageSendThread(new FastPlayer(playerEntity))).start();
 		
 		/** 更改密码 - 结束 **/
 	}
@@ -114,7 +115,7 @@ public class PlayerPasswordProcess {
 	public void ChangePasswdMD5(Player playerEntity, String OldPasswd, String NewPasswd,String ConfirmNewPasswd) {
 		
 		
-		PlayerEntity PDE = playerDataBLL.getPlayerData(playerEntity);
+		PlayerData PDE = playerDataBLL.getPlayerData(playerEntity);
 		
 		
 		//判断输入的旧密码是否正确
@@ -147,7 +148,7 @@ public class PlayerPasswordProcess {
 		playerDataBLL.updatePlayerData(PDE);
 		
 		
-		new Thread(new PlayerLoginMessageSendThread(playerEntity)).start();
+		new Thread(new PlayerLoginMessageSendThread(new FastPlayer(playerEntity))).start();
 		
 		/** 更改密码 - 结束 **/
 	}
@@ -155,84 +156,6 @@ public class PlayerPasswordProcess {
 	
 	
 	
-	
-	
-	
-	
-	/**用于判断玩家提供的密码是否正确**/
-	public boolean isRightPassword(PlayerEntity PDE,String password){
-		
-		
-		String Hash = ConfigManager.getConfig().getEnable_passwordHash();
-		
-		
-		Boolean isSupportOldpwd = ConfigManager.getConfig().isEnable_SupportOldPassword();
-		
-		String SaltPassword = password;
-		
-		
-		
-		//使用MD5
-		if(Hash.equalsIgnoreCase("MD5")){
-			
-			logManager.DM("使用MD5加密");
-			
-			
-			
-			if(APH.autoCompression(SaltPassword).equals(PDE.getPassword())){
-				logManager.DM("密码正确");
-				return true;
-			}
-			
-			
-			
-			
-			//判断是否支持旧密码
-			if(! isSupportOldpwd){
-				logManager.DM("密码错误");
-				return false;
-			}
-			
-			logManager.DM("支持使用旧密码");
-			
-			
-			//启用旧密码支持
-			if(password.equals(PDE.getPassword())){
-				logManager.DM("旧密码正确");			
-				this.updatePlayerPassword(PDE,SaltPassword);
-				return true;
-				
-			}
-			
-			logManager.DM("旧密码错误");		
-			return false;
-		}
-
-		
-		
-		//没有加密算法 - false & Other	
-		if(SaltPassword.equals(PDE.getPassword())){
-			return true;
-		}
-		
-		return false;	
-		
-		
-		
-	}
-	
-	
-	/**用于升级玩家的旧密码**/
-	public void updatePlayerPassword(PlayerEntity PDE,String Password){
-		
-		
-	
-		PDE.setPassword(APH.autoCompression(Password));
-		PDBI.updatePlayerData(PDE);
-		
-
-
-	}
 	
 	
 	

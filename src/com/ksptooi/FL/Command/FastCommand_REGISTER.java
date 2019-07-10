@@ -24,7 +24,7 @@ public class FastCommand_REGISTER implements FastCommand{
 			//提交注册事件
 			PlayerRegisterEvent ple=new PlayerRegisterEvent(pl, args);
 			
-			FastLogin.getEventManager().runEvent(ple);	
+			FastLogin.getEventManager().runFastEvent(ple);	
 			
 //			new Thread(new PlayerRegThread(pl,args)).start();
 			

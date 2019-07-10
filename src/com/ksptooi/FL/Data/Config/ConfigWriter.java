@@ -2,9 +2,9 @@ package com.ksptooi.FL.Data.Config;
 
 import java.io.File;
 
+import com.ksptooi.FL.BukkitSupport.FastLogin;
 import com.ksptooi.FL.Data.Config.Entity.DefaultLocationEntity;
 import com.ksptooi.FL.Data.Manager.DataManager;
-import com.ksptooi.FL.Util.FUtil;
 import com.ksptooi.FL.Util.Logger;
 import com.ksptooi.gdc.v6.Factory.DataSessionFactory;
 import com.ksptooi.gdc.v6.Session.dataSession;
@@ -36,7 +36,7 @@ public class ConfigWriter {
 			
 			ds.addline(" ");			
 			ds.addline("#基本配置\r\n" + 
-					"ConfigVersion="+FUtil.Version+"\r\n" + 
+					"ConfigVersion="+FastLogin.getVersion()+"\r\n" + 
 					"PlayerDataType=GeneralDataCore\r\n" + 
 					"LoginTimeOut=60\r\n" + 
 					"PasswordMaxLength=15\r\n" + 
@@ -59,7 +59,6 @@ public class ConfigWriter {
 					"\r\n" + 
 					"#安全配置\r\n" + 
 					"Enable_OPSecurity=true\r\n" + 
-					"Enable_SecurityWarning=true\r\n" + 
 					"Enable_HellGateSecurity=true\r\n" + 
 					"Enable_CreativeModeSecurity=true\r\n" + 
 					"Enable_passwordHash=MD5\r\n" + 

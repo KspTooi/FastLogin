@@ -74,8 +74,6 @@ public class ConfigReader {
 			
 		config.setEnable_OPSecurity(ds.getBoolean("Enable_OPSecurity"));		
 		
-		config.setEnable_SecurityWarning(ds.getBoolean("Enable_SecurityWarning"));
-		
 		config.setEnable_HellGateSecurity(ds.getBoolean("Enable_HellGateSecurity"));
 		
 		config.setEnable_CreativeModeSecurity(ds.getBoolean("Enable_CreativeModeSecurity"));

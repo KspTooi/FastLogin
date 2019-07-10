@@ -5,9 +5,29 @@ import java.io.File;
 import org.bukkit.entity.Player;
 
 import com.ksptooi.FL.Data.Config.ConfigManager;
+import com.ksptooi.FL.Data.Player.Entity.FastPlayer;
 
 public class PlayerFilter {
 
+	
+	@SuppressWarnings("unused")
+	public boolean isRealPlayer(FastPlayer pl){
+		
+		String Address=null;
+	
+		
+		try{
+			
+			Address=pl.getAddress().getHostName();
+			return true;
+			
+			
+		}catch(Exception exc){
+			return false;
+		}
+			
+	}
+	
 	
 	@SuppressWarnings("unused")
 	public boolean isRealPlayer(Player pl){

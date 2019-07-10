@@ -2,7 +2,7 @@ package com.ksptooi.FL.Data.Config;
 
 import java.io.File;
 
-import com.ksptooi.FL.Util.FUtil;
+import com.ksptooi.FL.BukkitSupport.FastLogin;
 import com.ksptooi.FL.Util.Logger;
 
 public class ConfigUpdate {
@@ -19,7 +19,7 @@ public class ConfigUpdate {
 	
 	public void updateConfig(){
 		
-		String FastLoginVersion = FUtil.Version;
+		String FastLoginVersion = FastLogin.getVersion();
 			
 		
 		logManager.logInfo("ºÏ≤È≈‰÷√∞Ê±æ");

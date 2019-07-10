@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import com.ksptooi.FL.Data.Config.ConfigManager;
 import com.ksptooi.FL.Data.Manager.DataManager;
 import com.ksptooi.FL.Data.Player.Cache.PlayerDataCache;
-import com.ksptooi.FL.Data.Player.Entity.PlayerEntity;
+import com.ksptooi.FL.Data.Player.Entity.PlayerData;
 import com.ksptooi.FL.General.Performance.PerformanceMonitorManager;
 import com.ksptooi.FL.Util.Logger;
 import com.ksptooi.gdc.v6.Factory.DataSessionFactory;
@@ -72,14 +72,14 @@ public class PlayerDataIO implements PlayerDataIO_Interfrace{
 
 	//从GD文件||缓存 加载玩家数据文件
 	@Override
-	public PlayerEntity queryPlayerDataByName(String playerName) {
+	public PlayerData queryPlayerDataByName(String playerName) {
 		
 				
 		//检查缓存
 		
-		if(PlayerDataCache.isExistsOfPDE(playerName)){
+		if(PlayerDataCache.isExistsOfPlayerData(playerName)){
 						
-			return PlayerDataCache.getPDE(playerName);
+			return PlayerDataCache.getPlayerData(playerName);
 			
 		}
 		
@@ -89,7 +89,7 @@ public class PlayerDataIO implements PlayerDataIO_Interfrace{
 		
 		File playerDataFile = this.getPlayerDataFile(playerName.toLowerCase());
 		
-		PlayerEntity pde=new PlayerEntity();
+		PlayerData pde=new PlayerData();
 		
 		
 		dataSession ds = dataSessionFactory.openSession(playerDataFile);
@@ -123,26 +123,26 @@ public class PlayerDataIO implements PlayerDataIO_Interfrace{
 		}
 			
 		//添加缓存
-		PlayerDataCache.updatePDE(pde);
+		PlayerDataCache.updatePlayerData(pde);
 		
 		return pde;
 	}
 
 	//从GD文件加载玩家数据文件
 	@Override
-	public PlayerEntity queryPlayerData(Player PlayerEntity) {
+	public PlayerData queryPlayerData(Player PlayerEntity) {
 		return this.queryPlayerDataByName(PlayerEntity.getName());
 	}
 	
 
 	//更新玩家数据文件到GD
 	@Override
-	public boolean updatePlayerData(PlayerEntity playerDataEntity) {
+	public boolean updatePlayerData(PlayerData playerDataEntity) {
 		
 		
 		File playerDataFile = this.getPlayerDataFile(playerDataEntity.getPlayername());
 		
-		PlayerEntity pde=playerDataEntity;
+		PlayerData pde=playerDataEntity;
 		
 		dataSession ds = dataSessionFactory.openSession(playerDataFile);
 		
@@ -163,7 +163,7 @@ public class PlayerDataIO implements PlayerDataIO_Interfrace{
 		PerformanceMonitorManager.addPFPC();
 		
 		//更新缓存
-		PlayerDataCache.updatePDE(playerDataEntity);
+		PlayerDataCache.updatePlayerData(playerDataEntity);
 
 		return true;
 	}

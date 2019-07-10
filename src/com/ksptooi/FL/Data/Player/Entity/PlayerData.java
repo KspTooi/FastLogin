@@ -3,7 +3,7 @@ package com.ksptooi.FL.Data.Player.Entity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-public class PlayerEntity {
+public class PlayerData {
 
 	private String playername=null;
 	

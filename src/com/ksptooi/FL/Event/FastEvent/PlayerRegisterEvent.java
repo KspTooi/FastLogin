@@ -4,19 +4,17 @@ import org.bukkit.entity.Player;
 
 import com.ksptooi.FL.BukkitSupport.FastLogin;
 import com.ksptooi.FL.Data.Config.ConfigManager;
-import com.ksptooi.FL.Data.Manager.DataManager;
-import com.ksptooi.FL.Data.Player.Entity.PlayerEntity;
-import com.ksptooi.FL.Data.PlayerData.PlayerDataManager;
+import com.ksptooi.FL.Data.Player.Entity.FastPlayer;
 import com.ksptooi.FL.PlayerProcess.PlayerPasswordProcess;
 import com.ksptooi.FL.Util.FUtil;
 
-public class PlayerRegisterEvent implements LittleEvent{
+public class PlayerRegisterEvent implements FastEvent{
 
-	Player pl = null;
+	FastPlayer pl = null;
 	String[] args = null;
 	
 	public PlayerRegisterEvent(Player pl,String[] args) {
-		this.pl = pl;
+		this.pl = new FastPlayer(pl);
 		this.args = args;
 	}
 	
@@ -26,8 +24,6 @@ public class PlayerRegisterEvent implements LittleEvent{
 		
 		try {
 
-			
-			PlayerDataManager playerDataManager = DataManager.getPlayerDataManager();
 			PlayerPasswordProcess playerPwdProcess = new PlayerPasswordProcess();
 
 			String Passwd = null;
@@ -43,9 +39,9 @@ public class PlayerRegisterEvent implements LittleEvent{
 			ConfirmPasswd = args[1];
 
 			// 判断是否已注册
-			PlayerEntity PDE = playerDataManager.getPlayerData(pl);
+			pl.reload();
 
-			if (PDE.isRegister()) {
+			if (pl.isRegister()) {
 				pl.sendMessage(ConfigManager.getLanguage().getRepeatRegister());
 				return;
 			}
@@ -70,7 +66,7 @@ public class PlayerRegisterEvent implements LittleEvent{
 
 			// 注册成功 - 调用事件
 			PlayerRegisterSuccessEvent prse = new PlayerRegisterSuccessEvent(pl, ConfirmPasswd);
-			FastLogin.getEventManager().runEvent(prse);
+			FastLogin.getEventManager().runFastEvent(prse);
 
 			
 		} catch (Exception e) {

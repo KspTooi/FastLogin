@@ -1,24 +1,22 @@
 package com.ksptooi.FL.Event.FastEvent;
 
-import org.bukkit.entity.Player;
 import com.ksptooi.FL.BukkitSupport.FastLogin;
 import com.ksptooi.FL.Data.Config.ConfigManager;
 import com.ksptooi.FL.Data.Config.Entity.Language;
 import com.ksptooi.FL.Data.Manager.DataManager;
-import com.ksptooi.FL.Data.Player.Entity.PlayerEntity;
+import com.ksptooi.FL.Data.Player.Entity.FastPlayer;
+import com.ksptooi.FL.Data.Player.Entity.PlayerData;
 import com.ksptooi.FL.Data.PlayerData.PlayerDataManager;
-import com.ksptooi.FL.Player.Effect.PlayerEffectManager;
 import com.ksptooi.FL.Util.FUtil;
 
-public class PlayerLoginSuccessEvent implements LittleEvent{
+public class PlayerLoginSuccessEvent implements FastEvent{
 
-	PlayerEntity pe=null;
-	Player pl = null;
+	PlayerData pe=null;
+	FastPlayer pl = null;
 	Language lang = null;
 
 	
-	public PlayerLoginSuccessEvent(PlayerEntity pe,Player pl) {
-		this.pe=pe;
+	public PlayerLoginSuccessEvent(FastPlayer pl) {
 		this.lang = ConfigManager.getLanguage();
 		this.pl=pl;
 		
@@ -27,7 +25,6 @@ public class PlayerLoginSuccessEvent implements LittleEvent{
 	@Override
 	public void run() {
 		
-		PlayerEffectManager playerEffectManager = FastLogin.getPlayerEffectManager();
 		PlayerDataManager pdm = DataManager.getPlayerDataManager();
 		
 		pe.setLogin(true);
@@ -46,14 +43,14 @@ public class PlayerLoginSuccessEvent implements LittleEvent{
 		FastLogin.getLoggerr().ShowMessage(pl);
 		
 		//为玩家添加粒子效果
-		playerEffectManager.addLoginedEffect(pl);
+		pl.addLoginedEffect();
 		
 		//移除玩家的失明效果
-		playerEffectManager.removePreLoginEffect(pl);
+		pl.removePreLoginEffect();
 		
 		//如果isEnable_LoginSecurity为True 则将玩家传送回最后下线的地方
 		if(ConfigManager.getConfig().isEnable_LoginSecurity()==true){
-			pl.teleport(pe.getLastQuitLocation());
+			pl.tpLastQuitLocation();
 		}
 		
 		

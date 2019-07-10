@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import org.bukkit.entity.Player;
 
 import com.ksptooi.FL.Data.Config.ConfigManager;
-import com.ksptooi.FL.Data.Player.Entity.PlayerEntity;
+import com.ksptooi.FL.Data.Player.Entity.PlayerData;
 import com.ksptooi.FL.Util.FUtil;
 import com.ksptooi.FL.Util.Logger;
 import com.ksptooi.gdc.v5.MysqlAPI.MysqlController;
@@ -131,7 +131,7 @@ public class PlayerSqlDataManager{
 	}
 
 	
-	public PlayerEntity getPlayerData(String playerName){
+	public PlayerData getPlayerData(String playerName){
 		
 		try {
 		
@@ -139,7 +139,7 @@ public class PlayerSqlDataManager{
 				+ "left JOIN "+playerLocTable+" on "+playerDataTable+"."+playerNameField+"="+playerLocTable+"."+playerNameField1+" "
 				+ "where "+playerDataTable+"."+playerNameField+"='"+playerName+"'";
 		
-		PlayerEntity PDE=new PlayerEntity();
+		PlayerData PDE=new PlayerData();
 	
 		this.createPlayerData(playerName);
 		
@@ -178,12 +178,12 @@ public class PlayerSqlDataManager{
 		return null;
 	}
 
-	public PlayerEntity getPlayerData(Player playerEntity) {
+	public PlayerData getPlayerData(Player playerEntity) {
 		return this.getPlayerData(playerEntity.getName());
 	}
 
 	
-	public boolean updatePlayerData(PlayerEntity PDE) {
+	public boolean updatePlayerData(PlayerData PDE) {
 		
 		String updateSql="UPDATE "+playerDataTable+" "
 				+ "set "+playerPwdField+"='"+PDE.getPassword()+"',"+playerRegStatusField+"='"+PDE.getRegister()+"',"+playerLoginStatusField+"='"+PDE.getLogin()+"' "

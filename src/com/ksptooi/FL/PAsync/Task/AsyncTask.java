@@ -1,21 +1,38 @@
-package com.ksptooi.FL.Player.Async;
+package com.ksptooi.FL.PAsync.Task;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import com.ksptooi.FL.Util.FUtil;
 
-public class PlayerAsyncProcess {
+public class AsyncTask {
 
+	
+	
+	//发送消息
+	public void taskMessage(Player pl,String str) {
+		
+		Bukkit.getScheduler().runTask(FUtil.MainClass, new Runnable() {
+			
+			public void run() {
+				pl.sendMessage(str);			
+			}
+				
+		});	
+		
+	}
+	
 	
 	
 	
 	//异步转同步踢出玩家
-	public void AsyncKickPlayer(Player pl,String KickMessage){
+	public void taskKick(Player pl,String KickMessage){
 		
 		Bukkit.getScheduler().runTask(FUtil.MainClass, new Runnable() {
 
@@ -28,7 +45,7 @@ public class PlayerAsyncProcess {
 	}
 	
 	//异步TP
-	public void AsyncTP(Player pl,Location loc) {
+	public void taskTp(Player pl,Location loc) {
 		
 		Bukkit.getScheduler().runTask(FUtil.MainClass, new Runnable() {
 
@@ -45,7 +62,7 @@ public class PlayerAsyncProcess {
 	
 	
 	//异步设置op
-	public void AsyncSetOP(Player pl,Boolean bool) {
+	public void taskSetOP(Player pl,Boolean bool) {
 		
 		Bukkit.getScheduler().runTask(FUtil.MainClass, new Runnable() {
 
@@ -64,7 +81,7 @@ public class PlayerAsyncProcess {
 	
 	
 	//异步转同步设置玩家的游戏模式
-	public void AsyncSetPlayerGameMode(Player pl,int GameModeCode){
+	public void taskSetGameMode(Player pl,int GameModeCode){
 		
 		Bukkit.getScheduler().runTask(FUtil.MainClass, new Runnable() {
 
@@ -88,7 +105,7 @@ public class PlayerAsyncProcess {
 	}
 	
 	//异步转同步为玩家添加Effect
-	public void AsyncAddPotionEffect(Player pl,PotionEffect PE){
+	public void taskAddPotionEffect(Player pl,PotionEffect PE){
 		
 		
 		Bukkit.getScheduler().runTask(FUtil.MainClass, new Runnable() {
@@ -106,7 +123,7 @@ public class PlayerAsyncProcess {
 	}
 	
 	//异步转同步为玩家移除Effect
-	public void AsyncRemovePotionEffect(Player pl,PotionEffectType PET){
+	public void taskRemovePotionEffect(Player pl,PotionEffectType PET){
 		
 		
 		Bukkit.getScheduler().runTask(FUtil.MainClass, new Runnable() {
@@ -120,9 +137,24 @@ public class PlayerAsyncProcess {
 
 		});
 		
-		
 	}
 
+	
+	//在世界中的某个坐标播放动画
+	public void taskPlayEffect(World world,Location loc,Effect effect) {
+		
+		Bukkit.getScheduler().runTask(FUtil.MainClass, new Runnable() {
+			
+			public void run() {
+				
+				world.playEffect(loc, effect,0);
+						
+			}	
+			
+		});
+		
+		
+	}
 	
 	
 	

@@ -5,10 +5,11 @@ import org.bukkit.command.CommandSender;
 import com.ksptooi.FL.BukkitSupport.FastLogin;
 import com.ksptooi.FL.Data.Config.ConfigManager;
 import com.ksptooi.FL.Data.Config.Entity.Language;
+import com.ksptooi.FL.Data.Hash.PasswordHash;
 import com.ksptooi.FL.Data.Manager.DataManager;
-import com.ksptooi.FL.Data.Player.Entity.PlayerEntity;
+import com.ksptooi.FL.Data.Player.Entity.FastPlayer;
+import com.ksptooi.FL.Data.Player.Entity.PlayerData;
 import com.ksptooi.FL.Data.PlayerData.PlayerDataManager;
-import com.ksptooi.FL.security.AdvPasswordHash;
 
 public class FastCommand_SETPASSWORD implements FastCommand{
 
@@ -17,7 +18,7 @@ public class FastCommand_SETPASSWORD implements FastCommand{
 	
 		PlayerDataManager pdm = DataManager.getPlayerDataManager();
 		
-		AdvPasswordHash advPasswordHash = DataManager.getAdvPasswordHash();
+		PasswordHash advPasswordHash = DataManager.getAdvPasswordHash();
 		
 		Language lang = ConfigManager.getLanguage();
 		
@@ -27,7 +28,7 @@ public class FastCommand_SETPASSWORD implements FastCommand{
 				return;
 			}
 			
-			PlayerEntity pde = pdm.getPlayerData(args[1]);
+			PlayerData pde = pdm.getPlayerData(args[1]);
 			
 			if(!pde.isRegister()){
 				sender.sendMessage(lang.getAdminSetPasswordError1());
@@ -39,10 +40,16 @@ public class FastCommand_SETPASSWORD implements FastCommand{
 			
 			pdm.updatePlayerData(pde);
 			
-			sender.sendMessage(lang.getAdminSetPasswordSuccess());
+			sender.sendMessage(lang.getAdminSetPasswordSuccess());			
 			
+			FastPlayer pl = FastLogin.getPlayer(pde.getPlayername());
 			
-			FastLogin.getAsyncProcess().AsyncKickPlayer(FastLogin.getPlayer(pde.getPlayername()), lang.getAdminSetPasswordKick());	
+			//如果玩家在线则踢出
+			if(pl!=null) {
+				
+				pl.kickPlayer(lang.getAdminSetPasswordKick());
+				
+			}		
 
 		
 	}
