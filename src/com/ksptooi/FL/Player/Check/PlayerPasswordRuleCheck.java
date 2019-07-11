@@ -18,6 +18,7 @@ public class PlayerPasswordRuleCheck {
 		this.passwordHash = DataManager.getAdvPasswordHash();
 		
 		this.lang = ConfigManager.getLanguage();
+		
 	}
 	
 	

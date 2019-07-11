@@ -2,40 +2,43 @@ package com.ksptooi.FL.Data.PlayerData;
 
 import java.sql.ResultSet;
 import org.bukkit.entity.Player;
-
+import com.ksptooi.FL.BukkitSupport.FastLogin;
 import com.ksptooi.FL.Data.Config.ConfigManager;
+import com.ksptooi.FL.Data.Manager.DataManager;
+import com.ksptooi.FL.Data.Player.Cache.PlayerDataCache;
 import com.ksptooi.FL.Data.Player.Entity.PlayerData;
-import com.ksptooi.FL.Util.FUtil;
 import com.ksptooi.FL.Util.Logger;
-import com.ksptooi.gdc.v5.MysqlAPI.MysqlController;
+import com.ksptooi.gdc.v6.Factory.SqlSessionFactory;
+import com.ksptooi.gdc.v6.Session.SqlSession;
 
 
 public class PlayerSqlDataManager{
 
-	MysqlController MC=null;
 	Logger lm=null;
 	
-	String playerDataTable=null;
-	String playerNameField=null;
-	String playerPwdField=null;
-	String playerRegStatusField=null;
-	String playerLoginStatusField=null;
+	private String playerDataTable=null;
+	private String playerNameField=null;
+	private String playerPwdField=null;
+	private String playerRegStatusField=null;
+	private String playerLoginStatusField=null;
 	
-	String playerLocTable=null;
-	String playerNameField1=null;
-	String playerLocworld=null;
-	String playerLocx=null;
-	String playerLocy=null;
-	String playerLocz=null;
-	String playerLocpitch=null;
-	String playerLocyaw=null;
+	private String playerLocTable=null;
+	private String playerNameField1=null;
+	private String playerLocworld=null;
+	private String playerLocx=null;
+	private String playerLocy=null;
+	private String playerLocz=null;
+	private String playerLocpitch=null;
+	private String playerLocyaw=null;
+	
+	private SqlSessionFactory sqlSessionFactory = null;
 	
 	public PlayerSqlDataManager(){
 		
-		MC=new MysqlController();
-		MC.loadConfigFromgdFile(ConfigManager.fastLoginConfigFile);
 //		MC.loadConfigFromgdFile(new File("F:\\1217/MineCraft Server/1.7.10[PT]/plugins/ksptooi/fastlogin/fastlogin.conf"));
-		lm=new Logger();
+		
+		
+		lm=FastLogin.getLoggerr();
 		
 		playerDataTable=ConfigManager.getConfig().getPlayerDataTable();
 		playerNameField=ConfigManager.getConfig().getPlayerNameField();
@@ -51,6 +54,13 @@ public class PlayerSqlDataManager{
 		playerLocz=ConfigManager.getConfig().getPlayerLocz();
 		playerLocpitch=ConfigManager.getConfig().getPlayerLocpitch();
 		playerLocyaw=ConfigManager.getConfig().getPlayerLocyaw();
+	
+		
+		//构建SqlSessionFactory
+		this.sqlSessionFactory = DataManager.getGeneralDataFactoryBuilder().buildSqlFactory(ConfigManager.fastLoginConfigFile);
+		
+		lm.logInfo("正在建立数据库连接.");
+		lm.logInfo("当前连接池最大容量:" + ConfigManager.getConfig().getPoolinitSize());
 		
 		this.createTable();
 	}
@@ -62,7 +72,9 @@ public class PlayerSqlDataManager{
 		
 		lm.logInfo("检查表");
 		
-		if( ! MC.tableIsExists(playerDataTable)){
+		SqlSession session = sqlSessionFactory.getSqlSession();
+		
+		if( ! session.isExistsTable(playerDataTable)){
 			
 			String playerDataTableSql="create table "+playerDataTable+"("+playerNameField+" varchar(50) not NULL PRIMARY KEY,"+playerPwdField+" varchar(50) not null,"+playerRegStatusField+" varchar(5) not null,"+playerLoginStatusField+" varchar(5) not NULL)";
 			
@@ -74,21 +86,25 @@ public class PlayerSqlDataManager{
 			lm.logInfo("创建表 - "+playerLocTable);
 
 			//玩家数据表
-			MC.noQuery(playerDataTableSql);
+			session.noQuery(playerDataTableSql);
 			
 			//玩家位置表
-			MC.noQuery(playerLocTableSql);
+			session.noQuery(playerLocTableSql);
 			
-			lm.logInfo("创建约束");
+			lm.logInfo("创建关系约束");
 			
-			MC.noQuery(foreign);
+			session.noQuery(foreign);
 			
 		}
 		
+		lm.logInfo("成功");
+		
+		//关闭Session
+		session.release();
 		
 	}
 	
-	
+	//创建玩家数据文件
 	public boolean createPlayerData(String playerName) {
 		
 		String querySql="select * from "+playerDataTable+" left JOIN "+playerLocTable+" on "+playerDataTable+"."+playerNameField+"="+playerLocTable+"."+playerNameField1+" where "+playerDataTable+"."+playerNameField+"='"+playerName+"'";
@@ -97,30 +113,39 @@ public class PlayerSqlDataManager{
 		
 		String insertSql1="insert "+playerLocTable+" values('"+playerName+"','empty',0,0,0,0,0);";
 			
+		SqlSession session = sqlSessionFactory.getSqlSession();
+		
 		try {
 		
-			ResultSet rs=MC.query(querySql);
+			ResultSet rs=session.query(querySql);
 				
 			
 			while(rs.next()){
+				//关闭Session
+				session.release();
 				return false;
 			}
-			
-			
+						
 			lm.logInfo("·为玩家创建新的数据库记录:"+playerName);
 			
-			MC.noQuery(insertSql);
-			MC.noQuery(insertSql1);
+			session.noQuery(insertSql);
+			session.noQuery(insertSql1);
 			
-			rs.getStatement().close();
+			//关闭Session
+			session.release();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 			lm.logError("数据库错误 - createPlayerData");
 			System.exit(0);
+			//关闭Session
+			session.release();
 			return false;
+			
 		}
 		
+		//关闭Session
+		session.release();
 		
 		return true;
 	}
@@ -131,7 +156,18 @@ public class PlayerSqlDataManager{
 	}
 
 	
+	//从MYSQL数据库||缓存 加载玩家数据文件
 	public PlayerData getPlayerData(String playerName){
+				
+		//检查缓存	
+		if(PlayerDataCache.isExistsOfPlayerData(playerName)){
+						
+			return PlayerDataCache.getPlayerData(playerName);
+			
+		}
+		
+		
+		SqlSession session = sqlSessionFactory.getSqlSession();
 		
 		try {
 		
@@ -139,29 +175,34 @@ public class PlayerSqlDataManager{
 				+ "left JOIN "+playerLocTable+" on "+playerDataTable+"."+playerNameField+"="+playerLocTable+"."+playerNameField1+" "
 				+ "where "+playerDataTable+"."+playerNameField+"='"+playerName+"'";
 		
-		PlayerData PDE=new PlayerData();
+		PlayerData pd=new PlayerData();
 	
 		this.createPlayerData(playerName);
-		
-		
-		ResultSet rs=MC.query(querySql);
+				
+		ResultSet rs=session.query(querySql);
 		
 			
 			
 			while(rs.next()){
 				
-				PDE.setPlayername(rs.getString(playerNameField));
-				PDE.setPassword(rs.getString(playerPwdField));		
-				PDE.setRegister(rs.getString(playerRegStatusField));
-				PDE.setLogin(rs.getString(playerLoginStatusField));
-				PDE.setLoc_world(rs.getString(playerLocworld));
-				PDE.setLoc_x(new Double(rs.getString(playerLocx)));
-				PDE.setLoc_y(new Double(rs.getString(playerLocy)));
-				PDE.setLoc_z(new Double(rs.getString(playerLocz)));
-				PDE.setLoc_pitch(new Double(rs.getString(playerLocpitch)));
-				PDE.setLoc_yaw(new Double(rs.getString(playerLocyaw)));
+				pd.setPlayername(rs.getString(playerNameField));
+				pd.setPassword(rs.getString(playerPwdField));		
+				pd.setRegister(rs.getString(playerRegStatusField));
+				pd.setLogin(rs.getString(playerLoginStatusField));
+				pd.setLoc_world(rs.getString(playerLocworld));
+				pd.setLoc_x(new Double(rs.getString(playerLocx)));
+				pd.setLoc_y(new Double(rs.getString(playerLocy)));
+				pd.setLoc_z(new Double(rs.getString(playerLocz)));
+				pd.setLoc_pitch(new Double(rs.getString(playerLocpitch)));
+				pd.setLoc_yaw(new Double(rs.getString(playerLocyaw)));
 				rs.getStatement().close();
-				return PDE;
+				
+				//添加缓存
+				PlayerDataCache.updatePlayerData(pd);
+				
+				//关闭Session
+				session.release();
+				return pd;
 			}
 			
 			
@@ -170,10 +211,14 @@ public class PlayerSqlDataManager{
 			e.printStackTrace();
 			e.printStackTrace();
 			lm.logError("数据库错误 - getPlayerData");
+			//关闭Session
+			session.release();
 			System.exit(0);
 		}
 		
 		
+		//关闭Session
+		session.release();
 		
 		return null;
 	}
@@ -185,6 +230,8 @@ public class PlayerSqlDataManager{
 	
 	public boolean updatePlayerData(PlayerData PDE) {
 		
+		SqlSession session = sqlSessionFactory.getSqlSession();
+		
 		String updateSql="UPDATE "+playerDataTable+" "
 				+ "set "+playerPwdField+"='"+PDE.getPassword()+"',"+playerRegStatusField+"='"+PDE.getRegister()+"',"+playerLoginStatusField+"='"+PDE.getLogin()+"' "
 				+ "where "+playerNameField+"='"+PDE.getPlayername()+"'";
@@ -194,9 +241,11 @@ public class PlayerSqlDataManager{
 				+ "where "+playerNameField1+"='"+PDE.getPlayername()+"'";
 		
 		
-		MC.noQuery(updateSql);
-		MC.noQuery(updateSql1);
+		session.noQuery(updateSql);
+		session.noQuery(updateSql1);
 		
+		//关闭Session
+		session.release();
 		
 		return true;
 	}

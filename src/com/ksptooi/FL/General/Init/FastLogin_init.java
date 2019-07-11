@@ -12,12 +12,15 @@ import com.ksptooi.FL.Command.FastCommand_SETSPAWN;
 import com.ksptooi.FL.Command.FastCommand_SPAWN;
 import com.ksptooi.FL.Command.FastCommand_TC;
 import com.ksptooi.FL.Data.Config.ConfigManager;
+import com.ksptooi.FL.Data.Manager.DataManager;
 
 public class FastLogin_init {
 
 	
 	
 	public static void init() {
+		
+		DataManager.PreInitDataManager();
 		
 		//≈‰÷√ºÏ≤È
 		ConfigManager.createConfig();
@@ -40,9 +43,13 @@ public class FastLogin_init {
 			ConfigManager.configUpdate();
 		}
 
+		
 		ConfigManager.configUpdate();
 		
 		FastLogin_init.regCommands();
+		
+		
+		DataManager.initDataManager();
 		
 		
 	}

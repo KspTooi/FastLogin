@@ -1,8 +1,8 @@
 package com.ksptooi.FL.Util;
 
 import java.util.ArrayList;
+
 import com.ksptooi.FL.BukkitSupport.FastLogin;
-import com.ksptooi.FL.Data.PlayerData.PlayerSqlDataManager;
 import com.ksptooi.FL.security.LoginSecurity;
 import com.ksptooi.FL.security.RegsterIPCount;
 
@@ -18,9 +18,6 @@ public class FUtil {
 	//全局变量
 	
 //	public static final File fastLoginConfigFile=new File("F:\\1217/MineCraft Server/1.7.10[PT]/plugins/ksptooi/fastlogin/fastlogin.conf");
-	
-		
-	public static PlayerSqlDataManager playerSqlDataBLL=null;
 	
 	public static LoginSecurity LS=new LoginSecurity();
 	

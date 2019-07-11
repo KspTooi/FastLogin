@@ -2,22 +2,26 @@ package com.ksptooi.FL.Data.PlayerData;
 
 import org.bukkit.entity.Player;
 import com.ksptooi.FL.Data.Config.ConfigManager;
+import com.ksptooi.FL.Data.Manager.DataManager;
 import com.ksptooi.FL.Data.Player.Entity.PlayerData;
 import com.ksptooi.FL.Data.PlayerDataIO.PlayerDataIO;
 import com.ksptooi.FL.Data.PlayerDataIO.PlayerDataIO_Interfrace;
-import com.ksptooi.FL.Util.FUtil;
 import com.ksptooi.FL.Util.Logger;
 
 public class PlayerDataManager implements PlayerData_Interface{
 
 	Logger lm=null;
 	PlayerDataIO_Interfrace playerDataIO=null;
-	PlayerSqlDataManager PSDB=null;
+	
+	PlayerSqlDataManager sqlDataManager=null;
 	
 	public PlayerDataManager(){
+		
 		lm = new Logger();
+		
 		playerDataIO = new PlayerDataIO();
-		PSDB=FUtil.playerSqlDataBLL;
+		
+		sqlDataManager=DataManager.getPlayerSqlDataManager();
 	}
 
 	
@@ -27,12 +31,10 @@ public class PlayerDataManager implements PlayerData_Interface{
 		
 		playerName=playerName.toLowerCase();
 		
-		PSDB=FUtil.playerSqlDataBLL;
-		
 		
 		if(ConfigManager.getConfig().getPlayerDataType().equalsIgnoreCase("mysql")){
 	
-			return PSDB.createPlayerData(playerName);
+			return sqlDataManager.createPlayerData(playerName);
 			
 		}
 		
@@ -50,11 +52,10 @@ public class PlayerDataManager implements PlayerData_Interface{
 		
 		playerName=playerName.toLowerCase();
 		
-		PSDB=FUtil.playerSqlDataBLL;
 		
 		if(ConfigManager.getConfig().getPlayerDataType().equalsIgnoreCase("mysql")){
 			
-			return PSDB.getPlayerData(playerName.toLowerCase());
+			return sqlDataManager.getPlayerData(playerName.toLowerCase());
 			
 		}
 		
@@ -73,11 +74,10 @@ public class PlayerDataManager implements PlayerData_Interface{
 	public boolean updatePlayerData(PlayerData PDE) {
 		
 		
-		PSDB=FUtil.playerSqlDataBLL;
 		
 		if(ConfigManager.getConfig().getPlayerDataType().equalsIgnoreCase("mysql")){
 			
-			return PSDB.updatePlayerData(PDE);
+			return sqlDataManager.updatePlayerData(PDE);
 			
 		}
 		

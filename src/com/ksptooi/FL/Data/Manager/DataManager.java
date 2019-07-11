@@ -1,7 +1,9 @@
 package com.ksptooi.FL.Data.Manager;
 
+import com.ksptooi.FL.Data.Config.ConfigManager;
 import com.ksptooi.FL.Data.Hash.PasswordHash;
 import com.ksptooi.FL.Data.PlayerData.PlayerDataManager;
+import com.ksptooi.FL.Data.PlayerData.PlayerSqlDataManager;
 import com.ksptooi.FL.Player.Check.PlayerNameRuleCheck;
 import com.ksptooi.FL.Player.Check.PlayerPasswordRuleCheck;
 import com.ksptooi.gdc.v6.Factory.*;
@@ -20,20 +22,46 @@ public class DataManager {
 	
 	private static PlayerNameRuleCheck playerNameRuleCheck = null;
 	
-	static {
+	private static PlayerSqlDataManager sqlDataManager = null;
+	
+	private static GeneralDataFactoryBuilder generalDataFactoryBuilder = null;
+	
+	public static void PreInitDataManager() {
 		
-		GeneralDataFactoryBuilder gdfb=new GeneralDataFactoryBuilder();
-		
-		dataSessionFactory = gdfb.buildDataFactory(32);
-		
-		playerDataManager = new PlayerDataManager();
-		
+		generalDataFactoryBuilder =new GeneralDataFactoryBuilder();	
+		dataSessionFactory = generalDataFactoryBuilder.buildDataFactory(32);
+	
+	}
+	
+	
+	public static void initDataManager(){
+				
 		advPasswordHash = new PasswordHash();
 		
 		passwordRuleCheck = new PlayerPasswordRuleCheck();
 		
 		playerNameRuleCheck = new PlayerNameRuleCheck();
 		
+		
+		//判断是否开启Mysql数据库
+		if(ConfigManager.getConfig().getPlayerDataType().equalsIgnoreCase("mysql")) {
+			
+			sqlDataManager = new PlayerSqlDataManager();
+			
+		}
+		
+		playerDataManager = new PlayerDataManager();
+		
+	}
+	
+	
+	public static GeneralDataFactoryBuilder getGeneralDataFactoryBuilder() {
+		return generalDataFactoryBuilder;
+	}
+	
+	
+	public static PlayerSqlDataManager getPlayerSqlDataManager() {
+		return sqlDataManager;
 	}
 	
 	

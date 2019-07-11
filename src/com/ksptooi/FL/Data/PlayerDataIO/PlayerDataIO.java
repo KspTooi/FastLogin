@@ -40,7 +40,6 @@ public class PlayerDataIO implements PlayerDataIO_Interfrace{
 		
 		File playerDataFile = this.getPlayerDataFile(playerName);
 			
-		
 		//判断文件是否存在
 		if( ! playerDataFile.exists()){
 			

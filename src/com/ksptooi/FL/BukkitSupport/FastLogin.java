@@ -8,9 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import com.ksptooi.FL.Command.BukkitCommandHandler;
 import com.ksptooi.FL.Command.CommandManager;
-import com.ksptooi.FL.Data.Config.ConfigManager;
 import com.ksptooi.FL.Data.Player.Entity.FastPlayer;
-import com.ksptooi.FL.Data.PlayerData.PlayerSqlDataManager;
 import com.ksptooi.FL.Event.FastEvent.EventManager;
 import com.ksptooi.FL.Event.PlayerEvent.PlayerEventHandler;
 import com.ksptooi.FL.General.Init.FastLogin_init;
@@ -35,7 +33,7 @@ public class FastLogin extends JavaPlugin {
 	
 	private static PlayerEffectManager playerEffectManager = null;
 	
-	private static final String Version="0.45-B-R1";
+	private static final String Version="0.45-B-R6";
 	
 	public FastLogin(){
 				
@@ -59,13 +57,6 @@ public class FastLogin extends JavaPlugin {
 		
 		Bukkit.getPluginManager().registerEvents(new PlayerEventHandler(), this);
 		
-		
-		//≈–∂œ «∑Ò π”√Mysql
-		if(ConfigManager.getConfig().getPlayerDataType().equalsIgnoreCase("mysql")){
-			
-			FUtil.playerSqlDataBLL=new PlayerSqlDataManager();
-			
-		}	
 		
 	}
 	

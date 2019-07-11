@@ -1,6 +1,6 @@
 name: FastLogin
 main: com.ksptooi.FL.BukkitSupport.FastLogin
-version: 0.45_A
+version: 0.45_B
 depend: [GeneralDataCoreV6]
 commands:
     login:
