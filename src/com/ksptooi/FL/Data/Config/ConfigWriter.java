@@ -67,9 +67,9 @@ public class ConfigWriter {
 					"\r\n" + 
 					"GeneralDataCore - Mysql ˝æ›ø‚≈‰÷√\r\n" + 
 					"address=127.0.0.1:3306\r\n" + 
-					"database=asmc\r\n" + 
+					"database=fastlogin\r\n" + 
 					"username=root\r\n" + 
-					"password=h14R4g5Rf6H5h7f\r\n" + 
+					"password=root\r\n" + 
 					"poolinitSize=32\r\n" + 
 					"param=?useSSL=false&characterEncoding=utf8&serverTimezone=UTC&autoReconnect=true\r\n" + 
 					"\r\n" + 
