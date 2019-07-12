@@ -133,6 +133,7 @@ public class PlayerSqlDataManager{
 			
 			//¹Ø±ÕSession
 			session.release();
+			return true;
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -144,10 +145,7 @@ public class PlayerSqlDataManager{
 			
 		}
 		
-		//¹Ø±ÕSession
-		session.release();
 		
-		return true;
 	}
 
 	
