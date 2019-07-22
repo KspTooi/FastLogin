@@ -65,6 +65,8 @@ public class PlayerDataIO implements PlayerDataIO_Interfrace{
 			return true;
 		}
 		
+		
+		
 		return false;
 	}
 	
@@ -74,8 +76,7 @@ public class PlayerDataIO implements PlayerDataIO_Interfrace{
 	public PlayerData queryPlayerDataByName(String playerName) {
 		
 				
-		//检查缓存
-		
+		//检查缓存		
 		if(PlayerDataCache.isExistsOfPlayerData(playerName)){
 						
 			return PlayerDataCache.getPlayerData(playerName);
@@ -83,15 +84,16 @@ public class PlayerDataIO implements PlayerDataIO_Interfrace{
 		}
 		
 		//更新IO计数
-		PerformanceMonitorManager.addPFPC();
-			
+		PerformanceMonitorManager.addPFPC();	
 		
 		File playerDataFile = this.getPlayerDataFile(playerName.toLowerCase());
 		
-		PlayerData pde=new PlayerData();
+		PlayerData pde=new PlayerData();	
 		
-		
+		//创建session
 		dataSession ds = dataSessionFactory.openSession(playerDataFile);
+		
+		
 		
 		pde.setPlayername(ds.get("playername"));
 		pde.setPassword(ds.get("password"));
@@ -108,8 +110,6 @@ public class PlayerDataIO implements PlayerDataIO_Interfrace{
 			pde.setLoc_pitch(ds.getDouble("loc.pitch"));
 			pde.setLoc_yaw(ds.getDouble("loc.yaw"));
 			
-			ds.release();
-			
 			Location loc=new Location(null, 0, 0, 0, 0, 0);
 			
 			loc.setWorld(Bukkit.getWorld(pde.getLoc_world()));
@@ -121,8 +121,13 @@ public class PlayerDataIO implements PlayerDataIO_Interfrace{
 			
 		}
 			
+			
 		//添加缓存
 		PlayerDataCache.updatePlayerData(pde);
+		
+		
+		//关闭Session
+		ds.release();
 		
 		return pde;
 	}
@@ -156,6 +161,7 @@ public class PlayerDataIO implements PlayerDataIO_Interfrace{
 		ds.set("loc.pitch", pde.getLoc_pitch());
 		ds.set("loc.yaw", pde.getLoc_yaw());
 		
+		//关闭session
 		ds.release();
 		
 		//更新IO计数

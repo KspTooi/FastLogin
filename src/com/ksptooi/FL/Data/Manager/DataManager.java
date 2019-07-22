@@ -29,10 +29,9 @@ public class DataManager {
 	public static void PreInitDataManager() {
 		
 		generalDataFactoryBuilder =new GeneralDataFactoryBuilder();	
-		dataSessionFactory = generalDataFactoryBuilder.buildDataFactory(32);
+		dataSessionFactory = generalDataFactoryBuilder.buildDataFactory(128);
 	
 	}
-	
 	
 	public static void initDataManager(){
 				

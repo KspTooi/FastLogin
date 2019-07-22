@@ -78,7 +78,6 @@ public class PlayerEventHandler implements Listener{
 		
 		event.setJoinMessage(lm.GenJoinedMessage(pl));
 		
-		
 		//µ÷ÓÃFastEvent
 		PlayerJo1nEvent eve = new PlayerJo1nEvent(pl);
 		FastLogin.getEventManager().runFastEvent(eve);

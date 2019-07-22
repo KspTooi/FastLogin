@@ -1,7 +1,6 @@
 package com.ksptooi.FL.BukkitSupport;
 
 import java.util.HashMap;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -33,7 +32,7 @@ public class FastLogin extends JavaPlugin {
 	
 	private static PlayerEffectManager playerEffectManager = null;
 	
-	private static final String Version="0.45-N";
+	private static final String Version="0.45-P-RE";
 	
 	public FastLogin(){
 				
