@@ -1,3 +1,7 @@
+当前项目已经停止开发,请移步[FastLoginR](https://github.com/90neko/FastLoginReload)
+======
+
+
 FastLogin
 ======
 "一个强大的轻量级登录插件!"<br>
